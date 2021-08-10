@@ -14,11 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 
+import com.browserstack.webdriver.config.DriverType;
+import com.browserstack.webdriver.core.WebDriverFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.github.webdriver.config.DriverType;
-import io.github.webdriver.core.WebDriverFactory;
 
 /**
  * Created with IntelliJ IDEA.

@@ -2,8 +2,8 @@ package com.browserstack.webdriver.testng;
 
 import org.openqa.selenium.WebDriver;
 
-import io.github.webdriver.config.Platform;
-import io.github.webdriver.core.WebDriverFactory;
+import com.browserstack.webdriver.config.Platform;
+import com.browserstack.webdriver.core.WebDriverFactory;
 
 /**
  * Created with IntelliJ IDEA.
