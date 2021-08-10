@@ -1,4 +1,4 @@
-package io.github.webdriver.core;
+package com.browserstack.webdriver.core;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -28,12 +28,12 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import io.github.webdriver.config.BrowserType;
-import io.github.webdriver.config.CommonCapabilities;
-import io.github.webdriver.config.DriverType;
-import io.github.webdriver.config.Platform;
-import io.github.webdriver.config.RemoteDriverConfig;
-import io.github.webdriver.config.WebDriverConfiguration;
+import com.browserstack.webdriver.config.BrowserType;
+import com.browserstack.webdriver.config.CommonCapabilities;
+import com.browserstack.webdriver.config.DriverType;
+import com.browserstack.webdriver.config.Platform;
+import com.browserstack.webdriver.config.RemoteDriverConfig;
+import com.browserstack.webdriver.config.WebDriverConfiguration;
 
 public class WebDriverFactory {
 

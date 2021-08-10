@@ -5,6 +5,8 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.browserstack.webdriver.core.WebDriverFactory;
+
 /**
  * Created with IntelliJ IDEA.
  *

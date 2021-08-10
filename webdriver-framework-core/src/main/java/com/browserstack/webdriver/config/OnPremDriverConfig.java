@@ -1,4 +1,4 @@
-package io.github.webdriver.config;
+package com.browserstack.webdriver.config;
 
 import java.util.List;
 
