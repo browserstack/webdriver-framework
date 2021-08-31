@@ -29,3 +29,4 @@ hs_err_pid*
 # MAC specific
 .DS_Store
 
+/.idea/
