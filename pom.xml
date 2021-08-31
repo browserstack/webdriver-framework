@@ -22,5 +22,6 @@
     <modules>
         <module>webdriver-framework-core</module>
         <module>webdriver-framework-testng</module>
+        <module>webdriver-framework-junit4</module>
     </modules>
 </project>
