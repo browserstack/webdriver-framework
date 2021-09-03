@@ -1,31 +1,32 @@
 <h1 align="center"> <a href="/">Webdriver Framework</a> </h1>
 
-In the Java ecosystem there isn’t any readily available framework/library that will allow Automation Developers to create WebDriver instances via a configuration file. The Webdriver Framework an attempt to create a simple framework that is responsible for
+This is a framework designed to manage Webdrivers efficiently.
+Selenium-based tests make extensive use of Webdriver APIs. Hence, Webdriver is a dependency for all Selenium-based test suites.There are no good dependency management frameworks for Selenium Webdrivers in Java. 
 
-:page_facing_up:  Parsing a simple configuration file to create the WebDriver instances.
-<br><br>
-:recycle: Providing glue code for the different test frameworks so that the user can use these to manage the lifecycle of the WebDriver.
-<br><br>
-:pushpin: Enable users to use BrowserStack Automate efficiently with best practices such as optimal parallel utilization, marking test statuses and following good  naming conventions (such as project name) etc.
+A good dependency injection framework should be able to isolate the creation of WebDrivers from the test code. It should also be able to externalise all the configuration (selenium capabilities) required for the WebDriver initialization. It should be flexible enough to support various test environments including on premise execution or execution on a selenium grid such as BrowserStack Automate.
+The webdriver framework is ____ 
 
 
-The dependency will host a Java library that will have the following components,
+### :pushpin: [Webdriver Framework Core](/webdriver-framework-core)
+Webdriver Framework Core is a loosely coupled module which incorporates the following:
+* Parses the external configuration files
+* Initialize webdriver instances based on the configuration
+* Provides APIs to inject the Webdriver instances in your tests
 
 
+### :pushpin: [Webdriver Framework TestNG](/webdriver-framework-testng)
+Webdriver Framework TestNG is a module built on top of *Webdriver Framework Core* to facilitate webdriver injection into TestNG based tests. It also manages the webdriver lifecycle with features such as:
+* Marking the status of tests running on BrowserStack Automate
+* Terminating the Webdriver instance
 
-<h3> :pushpin: <a href="/webdriver-framework-core"> webdriver-framework-core</a></h3>
- 
-  Responsible for parsing configuration files and initialise the WebDriver instances
 
-### :pushpin: [webdriver-framework-testng](/webdriver-framework-testng)
+### :pushpin: [Webdriver Framework JUnit4](/webdriver-framework-junit4)
+Webdriver Framework JUnit4 is a module built on top of *Webdriver Framework Core* to facilitate webdriver injection into JUnit4 based tests. It also manages the webdriver lifecycle with features such as:
+* Marking the status of tests running on BrowserStack Automate
+* Terminating the Webdriver instance
 
-A wrapper using webdriver-framework-core to manage WebDrivers for TestNG tests.
 
-### :pushpin: [webdriver-framework-junit4](/webdriver-framework-junit4)
-
-A wrapper using webdriver-framework-core to manage WebDrivers for JUnit4 tests.
-
-### :pushpin: [webdriver-framework-junit5](/webdriver-framework-junit5)
-
-A wrapper using webdriver-framework-core to manage WebDrivers for JUnit5 tests.
-
+### :pushpin: [Webdriver Framework JUnit5](/webdriver-framework-junit5)
+Webdriver Framework JUnit5 is a module built on top of *Webdriver Framework Core* to facilitate webdriver injection into JUnit5 based tests. It also manages the webdriver lifecycle with features such as:
+* Marking the status of tests running on BrowserStack Automate
+* Terminating the Webdriver instance
