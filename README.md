@@ -1,18 +1,31 @@
-# webdriver-framework
+<h1 align="center"> <a href="/">Webdriver Framework</a> </h1>
+
+In the Java ecosystem there isn’t any readily available framework/library that will allow Automation Developers to create WebDriver instances via a configuration file. The Webdriver Framework an attempt to create a simple framework that is responsible for
+
+:page_facing_up:  Parsing a simple configuration file to create the WebDriver instances.
+<br><br>
+:recycle: Providing glue code for the different test frameworks so that the user can use these to manage the lifecycle of the WebDriver.
+<br><br>
+:pushpin: Enable users to use BrowserStack Automate efficiently with best practices such as optimal parallel utilization, marking test statuses and following good  naming conventions (such as project name) etc.
 
 
-# webdriver-framework-core
+The dependency will host a Java library that will have the following components,
 
-A library that contains the logic for creating the WebDriver instances based on a configuration file. These WebDriver instances can be either be used for controlling cloud browsers or in-house browsers. This library will also be responsible for managing the BrowserStackLocal tunnel.
 
-# [webdriver-framework-testng](/webdriver-framework-testng)
 
-A library that contains the glue code and the necessary instructions for using webdriver-framework-core with the TestNG hooks. This library also contains TestNG specific code for managing the lifecycle of the WebDriver with Test Method.
+<h3> :pushpin: <a href="/webdriver-framework-core"> webdriver-framework-core</a></h3>
+ 
+  Responsible for parsing configuration files and initialise the WebDriver instances
 
-# webdriver-framework-junit4
+### :pushpin: [webdriver-framework-testng](/webdriver-framework-testng)
 
-Library that contains the glue code and the necessary instructions for integrating the WebDriver instantiation using the JUnit4 hooks. This library will also contain JUnit4 specific code for tying the lifecycle of the WebDriver with that of the Test Method.
+A wrapper using webdriver-framework-core to manage WebDrivers for TestNG tests.
 
-# webdriver-framework-junit5
+### :pushpin: [webdriver-framework-junit4](/webdriver-framework-junit4)
 
-Library that contains the glue code and the necessary instructions for integrating the WebDriver instantiation using JUnit5 hooks. This library will also contain JUnit4 specific code for tying the lifecycle of the WebDriver with that of the Test Method.
+A wrapper using webdriver-framework-core to manage WebDrivers for JUnit4 tests.
+
+### :pushpin: [webdriver-framework-junit5](/webdriver-framework-junit5)
+
+A wrapper using webdriver-framework-core to manage WebDrivers for JUnit5 tests.
+
