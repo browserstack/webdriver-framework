@@ -1,4 +1,4 @@
-# webdriver-framework-testng
+# Webdriver Framework TestNG
 
 A library that contains the glue code and the necessary instructions for using webdriver-framework-core with the TestNG hooks. This library also contains TestNG specific code for managing the lifecycle of the WebDriver with Test Method.
 
