@@ -64,12 +64,7 @@ public class WebDriverParameterResolver implements ParameterResolver {
     public Object resolveParameter(ParameterContext parameterContext,
                                    ExtensionContext extensionContext) throws ParameterResolutionException {
         String testMethodName = extensionContext.getDisplayName();
-        String[] specificCapabilities = new String[0];
-        WebDriverTest webDriverTest = extensionContext.getTestMethod().get().getAnnotation(WebDriverTest.class);
-        if (webDriverTest != null) {
-            specificCapabilities = webDriverTest.capabilities();
-        }
-        WebDriver webDriver = createWebDriver(testMethodName, specificCapabilities);
+        WebDriver webDriver = createWebDriver(testMethodName);
         if (webDriver == null) {
             throw new ParameterResolutionException("Unable to create WebDriver for Platform :: "
                     + this.platform.getName() + " method :: " + testMethodName);
@@ -78,7 +73,7 @@ public class WebDriverParameterResolver implements ParameterResolver {
         return webDriver;
     }
 
-    private WebDriver createWebDriver(String testMethodName, String[] specificCapabilities) {
+    private WebDriver createWebDriver(String testMethodName) {
         WebDriver webDriver;
         //TODO : Support for SpecificCapabilities
         // webDriver = this.webDriverFactory.createWebDriverForPlatform(platform, testMethodName, specificCapabilities);

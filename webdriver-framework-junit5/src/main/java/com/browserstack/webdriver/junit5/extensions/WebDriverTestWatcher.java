@@ -1,7 +1,7 @@
 package com.browserstack.webdriver.junit5.extensions;
 
-import com.browserstack.examples.config.DriverType;
-import com.browserstack.examples.config.WebDriverFactory;
+import com.browserstack.webdriver.config.DriverType;
+import com.browserstack.webdriver.core.WebDriverFactory;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
 import org.openqa.selenium.JavascriptExecutor;
