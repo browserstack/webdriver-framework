@@ -9,6 +9,7 @@
 
     <name>webdriver-framework-core</name>
     <description>A simple webdriver-framework-core.</description>
+    <url>https://www.browserstack.com</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
