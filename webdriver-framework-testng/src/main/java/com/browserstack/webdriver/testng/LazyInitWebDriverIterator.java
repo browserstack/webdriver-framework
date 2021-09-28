@@ -48,7 +48,7 @@ public class LazyInitWebDriverIterator implements Iterator<Object[]> {
         int idx = 0;
         List<Object[]> tempTestParams = new ArrayList<>();
         do {
-            Object[] testParam = testParams.get(0);
+            Object[] testParam = testParams.get(idx);
             if (testParam == null) {
                 testParam = new Object[0];
             }
