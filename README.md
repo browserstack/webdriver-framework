@@ -4,7 +4,6 @@ This is a framework designed to manage Webdrivers efficiently.
 Selenium-based tests make extensive use of Webdriver APIs. Hence, Webdriver is a dependency for all Selenium-based test suites.There are no good dependency management frameworks for Selenium Webdrivers in Java. 
 
 A good dependency injection framework should be able to isolate the creation of WebDrivers from the test code. It should also be able to externalise all the configuration (selenium capabilities) required for the WebDriver initialization. It should be flexible enough to support various test environments including on premise execution or execution on a selenium grid such as BrowserStack Automate.
-The webdriver framework is ____ 
 
 
 ### :pushpin: [Webdriver Framework Core](/webdriver-framework-core)
