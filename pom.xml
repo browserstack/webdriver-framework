@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
 
     <name>webdriver-framework</name>
-    <description>Java bindings for BrowserStack Local</description>
+    <description>A webdriver framework which manages webdriver creation based on an external configuration file</description>
     <url>https://www.browserstack.com</url>
 
     <licenses>
