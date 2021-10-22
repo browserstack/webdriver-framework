@@ -9,9 +9,9 @@ This is the JUnit5 specific framework library intended to be used by developers 
 1. <b>Add the library dependency to your pom.xml.</b>
 ```xml
 <dependency>
-  <groupId>io.github.webdriver.junit5</groupId>
+  <groupId>com.browserstack</groupId>
   <artifactId>webdriver-framework-junit5</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
 </dependency>
  ```
  

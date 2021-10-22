@@ -10,9 +10,9 @@ This is the JUnit4 specific framework library intended to be used by developers 
 
 ```xml
 <dependency>
-  <groupId>com.browserstack.webdriver.junit4</groupId>
+  <groupId>com.browserstack</groupId>
   <artifactId>webdriver-framework-junit4</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 

@@ -9,9 +9,9 @@ This is the testng specific framework library intended to be used by developers 
 1. <b>Add the library dependency to your pom.xml.</b>
 ```xml
 <dependency>
-  <groupId>io.github.webdriver.testng</groupId>
+  <groupId>com.browserstack</groupId>
   <artifactId>webdriver-framework-testng</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
 </dependency>
  ```
  
