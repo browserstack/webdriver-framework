@@ -66,6 +66,7 @@ public class WebDriverFactory {
     private boolean isLocalTunnelEnabled() {
         return webDriverConfiguration.getCloudDriverConfig() != null &&
                  webDriverConfiguration.getCloudDriverConfig().getLocalTunnel() != null &&
+                 webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled() != null &&
                  webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled();
     }
 
