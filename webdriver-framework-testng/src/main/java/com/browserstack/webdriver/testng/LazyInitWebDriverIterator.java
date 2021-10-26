@@ -5,7 +5,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebDriver;
 
 import com.browserstack.webdriver.config.Platform;
@@ -21,11 +23,13 @@ public class LazyInitWebDriverIterator implements Iterator<Object[]> {
     private final String testMethodName;
     private final List<Platform> platforms;
     private final List<Object[]> testParams;
+    private final boolean createManagedWebDriver;
     private int paramIdx = 0;
 
-    public LazyInitWebDriverIterator(String testMethodName, List<Platform> platforms, Object[] testParams) {
+    public LazyInitWebDriverIterator(String testMethodName, Object[] testParams) {
         this.testMethodName = testMethodName;
-        this.platforms = platforms;
+        this.platforms = WebDriverFactory.getInstance().getPlatforms();
+        this.createManagedWebDriver = false;
 
         if (testParams == null) {
             testParams = new Object[0];
@@ -35,13 +39,28 @@ public class LazyInitWebDriverIterator implements Iterator<Object[]> {
         this.testParams = populateTestParams(otherParamsList);
     }
 
-    public LazyInitWebDriverIterator(String testMethodName, List<Platform> platforms, List<Object[]> testParams) {
+    public LazyInitWebDriverIterator(String testMethodName, List<Object[]> testParams) {
         this.testMethodName = testMethodName;
-        this.platforms = platforms;
+        this.platforms = WebDriverFactory.getInstance().getPlatforms();
+        this.createManagedWebDriver = false;
+
         if (testParams == null) {
             testParams = new ArrayList<>();
         }
         this.testParams = populateTestParams(testParams);
+    }
+
+    public LazyInitWebDriverIterator(Boolean createManagedWebDriver,
+                                     Object[][] testParams) {
+        this.testMethodName = StringUtils.EMPTY;
+        this.platforms = WebDriverFactory.getInstance().getPlatforms();
+        this.createManagedWebDriver = createManagedWebDriver;
+
+        List<Object[]> testParamsList = new ArrayList<>();
+        if (testParams != null) {
+            testParamsList = Arrays.stream(testParams).collect(Collectors.toList());
+        }
+        this.testParams = populateTestParams(testParamsList);
     }
 
     private List<Object[]> populateTestParams(List<Object[]> testParams) {
@@ -89,8 +108,13 @@ public class LazyInitWebDriverIterator implements Iterator<Object[]> {
         Object[] methodTestParams = this.testParams.get(paramIdx++);
         if (methodTestParams[methodTestParams.length - 1] instanceof Platform) {
             Platform platform = (Platform) methodTestParams[methodTestParams.length - 1];
-            WebDriver webDriver = WebDriverFactory.getInstance().createWebDriverForPlatform(platform, this.testMethodName);
-            methodTestParams[methodTestParams.length - 1] = webDriver;
+            if (this.createManagedWebDriver) {
+                ManagedWebDriver managedWebDriver = new ManagedWebDriver(testMethodName, platform);
+                methodTestParams[methodTestParams.length - 1] = managedWebDriver;
+            } else {
+                WebDriver webDriver = WebDriverFactory.getInstance().createWebDriverForPlatform(platform, this.testMethodName);
+                methodTestParams[methodTestParams.length - 1] = webDriver;
+            }
         }
 
         return methodTestParams;

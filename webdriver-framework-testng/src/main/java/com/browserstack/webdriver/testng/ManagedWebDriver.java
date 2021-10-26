@@ -12,21 +12,42 @@ import com.browserstack.webdriver.core.WebDriverFactory;
  */
 public class ManagedWebDriver {
 
-    private final String testMethodName;
+    private String testName;
     private final WebDriverFactory webDriverFactory;
     private final Platform platform;
     private WebDriver webDriver;
 
     public ManagedWebDriver(String testMethodName, Platform platform) {
-        this.testMethodName = testMethodName;
+        this.testName = testMethodName;
         this.platform = platform;
         this.webDriverFactory = WebDriverFactory.getInstance();
     }
 
+    public String getTestName() {
+        return testName;
+    }
+
+    public void setTestName(String testName) {
+        this.testName = testName;
+    }
+
+
     public WebDriver getWebDriver() {
         if (this.webDriver == null) {
-            this.webDriver = this.webDriverFactory.createWebDriverForPlatform(platform, testMethodName);
+            this.webDriver = this.webDriverFactory.createWebDriverForPlatform(platform, testName);
         }
         return this.webDriver;
     }
+
+    public Platform getPlatform() {
+        return this.platform;
+    }
+
+    public void quitDriver() {
+        if (this.webDriver != null) {
+            this.webDriver.quit();
+            this.webDriver = null;
+        }
+    }
+
 }
