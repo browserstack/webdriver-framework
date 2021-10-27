@@ -11,7 +11,7 @@ This is the JUnit5 specific framework library intended to be used by developers 
 <dependency>
   <groupId>com.browserstack</groupId>
   <artifactId>webdriver-framework-junit5</artifactId>
-  <version>1.0.0</version>
+  <version>LATEST</version>
 </dependency>
  ```
  

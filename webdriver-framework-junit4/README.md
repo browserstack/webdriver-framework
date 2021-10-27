@@ -12,7 +12,7 @@ This is the JUnit4 specific framework library intended to be used by developers 
 <dependency>
   <groupId>com.browserstack</groupId>
   <artifactId>webdriver-framework-junit4</artifactId>
-  <version>1.0.0</version>
+  <version>LATEST</version>
 </dependency>
 ```
 

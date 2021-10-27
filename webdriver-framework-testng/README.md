@@ -11,7 +11,7 @@ This is the testng specific framework library intended to be used by developers 
 <dependency>
   <groupId>com.browserstack</groupId>
   <artifactId>webdriver-framework-testng</artifactId>
-  <version>1.0.0</version>
+  <version>LATEST</version>
 </dependency>
  ```
  
