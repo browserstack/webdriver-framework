@@ -15,10 +15,11 @@ public class LocalFactory {
     private static volatile LocalFactory instance;
 
     private final Local local = new Local();
-    private final String localIdentifier = RandomStringUtils.randomAlphabetic(8);
+    private final String localIdentifier;
 
     private LocalFactory(Map<String, String> localOptions) {
         try {
+            localIdentifier = localOptions.containsKey("localIdentifier")?localOptions.get("localIdentifier"):RandomStringUtils.randomAlphabetic(8);
             localOptions.put("localIdentifier", localIdentifier);
             if (System.getProperty("https.proxyHost") != null) {
                 setProxy("https", localOptions);
@@ -30,7 +31,7 @@ public class LocalFactory {
             local.start(localOptions);
             LOGGER.debug("Started BrowserStack Local with identifier {}.", localIdentifier);
         } catch (Exception e) {
-            LOGGER.error("Initialization of BrowserStack Local with identifier {} failed.", localIdentifier);
+            LOGGER.error("Initialization of BrowserStack Local failed.");
             throw new RuntimeException("Initialization of BrowserStack Local failed.", e);
         }
     }
@@ -75,17 +76,17 @@ public class LocalFactory {
     }
 
     private static class Closer extends Thread {
-        private final Local LOCAL;
+        private final Local local;
 
         public Closer(Local local) {
-            this.LOCAL = local;
+            this.local = local;
         }
 
         @Override
         public void run() {
             try {
-                if (LOCAL.isRunning()) {
-                    LOCAL.stop();
+                if (local.isRunning()) {
+                    local.stop();
                 }
             } catch (Exception e) {
                LOGGER.error("Error encountered while stopping BrowserStack Local { }",e);
