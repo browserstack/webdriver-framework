@@ -2,28 +2,30 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <groupId>com.browserstack.webdriver</groupId>
+        <groupId>com.browserstack</groupId>
         <artifactId>webdriver-framework</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <modelVersion>4.0.0</modelVersion>
     <artifactId>webdriver-framework-core</artifactId>
+    <packaging>jar</packaging>
 
     <name>webdriver-framework-core</name>
-    <description>A simple webdriver-framework-core.</description>
+    <description>The module handles parsing the configuration file and initialising the WebDriver.</description>
     <url>https://www.browserstack.com</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-
         <selenium.version>3.141.59</selenium.version>
         <jackson.version>2.12.2</jackson.version>
         <slf4j.version>1.7.25</slf4j.version>
         <commons.lang3.version>3.11</commons.lang3.version>
+        <browserstack.local.version>1.0.6</browserstack.local.version>
     </properties>
 
     <dependencies>
@@ -63,6 +65,11 @@
             <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.browserstack</groupId>
+            <artifactId>browserstack-local-java</artifactId>
+            <version>${browserstack.local.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -70,6 +77,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>

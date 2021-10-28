@@ -44,13 +44,14 @@ public class WebDriverFactory {
     private static final String BROWSERSTACK_ACCESS_KEY = "BROWSERSTACK_ACCESS_KEY";
     private static final String BUILD_ID = "BUILD_ID";
     private static final String DEFAULT_BUILD_NAME = "browserstack-examples-junit5";
+    private static final String DEFAULT_BUILD_ENV_NAME = "BROWSERSTACK_BUILD_NAME";
 
     private static final String WEBDRIVER_CHROME_DRIVER = "webdriver.chrome.driver";
     private static final String WEBDRIVER_GECKO_DRIVER = "webdriver.gecko.driver";
     private static final String WEBDRIVER_IE_DRIVER = "webdriver.ie.driver";
     private static final String WEBDRIVER_EDGE_DRIVER = "webdriver.edge.driver";
 
-    private static WebDriverFactory instance;
+    private static volatile WebDriverFactory instance;
 
     private final WebDriverConfiguration webDriverConfiguration;
     private final String defaultBuildSuffix;
@@ -66,9 +67,9 @@ public class WebDriverFactory {
     private boolean isLocalTunnelEnabled() {
         return webDriverConfiguration.getCloudDriverConfig() != null &&
                  webDriverConfiguration.getCloudDriverConfig().getLocalTunnel() != null &&
+                 webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled() != null &&
                  webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled();
     }
-
 
     public static WebDriverFactory getInstance() {
         if (instance == null) {
@@ -97,7 +98,13 @@ public class WebDriverFactory {
 
     private void startLocalTunnel() {
         if (isLocalTunnelEnabled()) {
-            // TODO: Implement the single interface to start the Local Tunnel
+            Map<String, String> localOptions = webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions();
+            String accessKey = webDriverConfiguration.getCloudDriverConfig().getAccessKey();
+            if (StringUtils.isNoneEmpty(System.getenv(BROWSERSTACK_ACCESS_KEY))) {
+                accessKey = System.getenv(BROWSERSTACK_ACCESS_KEY);
+            }
+            localOptions.put("key", accessKey);
+            LocalFactory.createInstance(webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions());
         }
     }
 
@@ -176,9 +183,9 @@ public class WebDriverFactory {
         platformCapabilities.setCapability("browserstack.user", user);
         platformCapabilities.setCapability("browserstack.key", accessKey);
 
-//        if (isLocalTunnelEnabled()) {
-//            platformCapabilities.setCapability("browserstack.localIdentifier", BrowserStackLocalFactory.getInstance().getLocalIdentifier());
-//        }
+        if (isLocalTunnelEnabled()) {
+            platformCapabilities.setCapability("browserstack.localIdentifier", LocalFactory.getInstance().getLocalIdentifier());
+        }
 
         LOGGER.debug("Initialising RemoteWebDriver with capabilities : {}",platformCapabilities);
         return new RemoteWebDriver(new URL(remoteDriverConfig.getHubUrl()), platformCapabilities);
@@ -263,6 +270,9 @@ public class WebDriverFactory {
     }
 
     private String createBuildName(String buildPrefix) {
+        if(StringUtils.isNotEmpty(System.getenv(DEFAULT_BUILD_ENV_NAME))){
+            return System.getenv(DEFAULT_BUILD_ENV_NAME);
+        }
         if (StringUtils.isEmpty(buildPrefix)) {
             buildPrefix = DEFAULT_BUILD_NAME;
         }
