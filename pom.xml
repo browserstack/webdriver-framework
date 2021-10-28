@@ -2,12 +2,12 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.browserstack</groupId>
     <artifactId>webdriver-framework</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>webdriver-framework</name>
@@ -19,7 +19,7 @@
             <url>https://opensource.org/licenses/MIT</url>
         </license>
     </licenses>
-         
+
     <developers>
         <developer>
             <name>BrowserStack</name>
@@ -35,7 +35,7 @@
         <module>webdriver-framework-junit5</module>
         <module>webdriver-framework-junit4</module>
     </modules>
-          
+
     <scm>
         <connection>scm:git:git@github.com:browserstack/webdriver-framework.git</connection>
         <developerConnection>scm:git:git@github.com:browserstack/webdriver-framework.git</developerConnection>
@@ -143,7 +143,7 @@
             </plugins>
         </pluginManagement>
     </build>
-         
+
     <profiles>
         <profile>
             <id>release-sign-artifacts</id>

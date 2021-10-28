@@ -144,6 +144,10 @@ public class WebDriverFactory {
         return webDriverConfiguration.getDriverType();
     }
 
+    public boolean isCloudDriver() {
+        return webDriverConfiguration.getDriverType() == DriverType.cloudDriver;
+    }
+
     public List<Platform> getPlatforms() {
         return this.webDriverConfiguration.getActivePlatforms();
     }

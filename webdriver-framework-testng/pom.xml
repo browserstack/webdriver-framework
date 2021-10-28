@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.browserstack</groupId>
         <artifactId>webdriver-framework</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>webdriver-framework-testng</artifactId>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.browserstack</groupId>
             <artifactId>webdriver-framework-core</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
