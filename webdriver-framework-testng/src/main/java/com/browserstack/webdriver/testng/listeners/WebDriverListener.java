@@ -5,8 +5,6 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
@@ -14,8 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 
-import com.browserstack.webdriver.config.DriverType;
 import com.browserstack.webdriver.core.WebDriverFactory;
+import com.browserstack.webdriver.testng.ManagedWebDriver;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -28,30 +26,37 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class WebDriverListener extends TestListenerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebDriverListener.class);
+    private static final String TEST_PASS_REASON = "Test Passed";
+    private static final String TEST_PASS_STATUS = "passed";
+    private static final String TEST_FAIL_STATUS = "failed";
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void onTestSuccess(ITestResult testResult) {
         super.onTestSuccess(testResult);
         WebDriver webDriver = getWebDriverFromParameters(testResult.getParameters());
-        markAndCloseWebDriver(webDriver, "passed", "Test Passed");
+        markAndCloseWebDriver(webDriver, TEST_PASS_STATUS, TEST_PASS_REASON);
     }
 
     @Override
     public void onTestFailure(ITestResult testResult) {
         super.onTestFailure(testResult);
         WebDriver webDriver = getWebDriverFromParameters(testResult.getParameters());
-        markAndCloseWebDriver(webDriver, "failed", testResult.getThrowable().toString());
+        markAndCloseWebDriver(webDriver, TEST_FAIL_STATUS, testResult.getThrowable().toString());
     }
-
-    private byte[] attachFailedScreenshot(WebDriver driver) {
-        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-    }
-
 
     private WebDriver getWebDriverFromParameters(Object[] parameters) {
         Optional<Object> webDriverParam = Arrays.stream(parameters).filter(p -> p instanceof WebDriver).findFirst();
-        return (WebDriver) webDriverParam.orElse(null);
+        WebDriver webDriver = (WebDriver) webDriverParam.orElse(null);
+        if (webDriver == null) {
+            Optional<Object> managedWebDriverParam = Arrays.stream(parameters).filter(p -> p instanceof ManagedWebDriver).findFirst();
+            if (managedWebDriverParam.isPresent()) {
+                webDriver = ((ManagedWebDriver) managedWebDriverParam.get()).getWebDriver();
+            }
+        }
+
+        return webDriver;
     }
 
 
@@ -61,8 +66,7 @@ public class WebDriverListener extends TestListenerAdapter {
         }
 
         try {
-            if (webDriver instanceof RemoteWebDriver
-                  && WebDriverFactory.getInstance().getDriverType() == DriverType.cloudDriver) {
+            if (webDriver instanceof RemoteWebDriver && WebDriverFactory.getInstance().isCloudDriver()) {
                 String script = createExecutorScript(status, reason);
                 LOGGER.debug("Script to execute:: {}", script);
                 if (StringUtils.isNotEmpty(script)) {
@@ -70,9 +74,7 @@ public class WebDriverListener extends TestListenerAdapter {
                 }
             }
         } finally {
-            if (webDriver != null) {
-                webDriver.quit();
-            }
+            webDriver.quit();
         }
     }
 

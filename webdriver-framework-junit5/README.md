@@ -9,16 +9,16 @@ This is the JUnit5 specific framework library intended to be used by developers 
 1. <b>Add the library dependency to your pom.xml.</b>
 ```xml
 <dependency>
-  <groupId>io.github.webdriver.junit5</groupId>
+  <groupId>com.browserstack</groupId>
   <artifactId>webdriver-framework-junit5</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>LATEST</version>
 </dependency>
  ```
  
 2. <b>Create Webdriver Test</b>:  Create your test methods with Webdriver as a parameter. 
 
 ```java
-public abstract class SampleTest {
+public class SampleTest {
 
    public void test (WebDriver webDriver) {
       ...
@@ -30,7 +30,7 @@ public abstract class SampleTest {
 3. <b>Annotate your tests with @WebDriverTest Annotations</b>: This will inject Webdrivers based on your configuration files.
 
 ```java
-public abstract class SampleTest {
+public class SampleTest {
     
    @WebDriverTest
    public void test (WebDriver webDriver) {
