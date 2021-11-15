@@ -1,0 +1,64 @@
+driverType: cloudDriver
+mobileAppTesting: true
+
+onPremGridDriver:
+  hubUrl: http://localhost:4723/wd/hub
+  app_hash_id:
+    ios: hash_id
+    android: hash_id
+  app_custom_id:
+    ios: custom_id
+    android: custom_id
+  platforms:
+    - name:
+      capabilities:
+        platformName: "Android"
+        platformVersion: "11.0"
+        deviceName: "Google Pixel 4"
+        appPackage: "com.browserstack.sampeapp"
+        appActivity: "com.browserstack.sampeapp.MainActivity"
+    - name:
+      capabilities:
+        platformName: "iOS"
+        platformVersion: "14"
+        deviceName: "iPhone 11" 
+
+cloudDriver:
+  hubUrl: https://hub-cloud.browserstack.com/wd/hub
+  user: BROWSERSTACK_USERNAME
+  accessKey: BROWSERSTACK_ACCESSKEY
+  useApp: true
+  app_hash_id:
+    ios: hash_id
+    android: hash_id
+  app_custom_id:
+    ios: custom_id
+    android: custom_id
+  localTunnel:
+    enabled: false
+  common_capabilities:
+    project: BrowserStack Demo Repository
+    buildPrefix: browserstack-examples-junit5
+    capabilities:
+      browserstack.debug: true
+      browserstack.networkLogs: true
+      browserstack.console: debug
+  platforms:
+    - name: IOS - iPhone 11
+      os: iOS
+      os_version: '14'
+      device: "iPhone 11"
+      capabilities:
+        browserstack.appium_version: 1.21.0
+    - name: Android  - Pixel 5
+      os: Android
+      os_version: '12'
+      device: "Google Pixel 5"
+      capabilities:
+        browserstack.appium_version: 1.21.0
+    - name: Android  - Samsung galaxy S21
+      os: Android
+      os_version: '11.0'
+      device: "Samsung Galaxy S21"
+      capabilities:
+        browserstack.appium_version: 1.21.0
