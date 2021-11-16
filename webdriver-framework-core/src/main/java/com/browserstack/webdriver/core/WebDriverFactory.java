@@ -293,6 +293,7 @@ public class WebDriverFactory {
         platformCapabilities.setCapability("platformName", platform.getOs());
         platformCapabilities.setCapability("platformVersion", platform.getOsVersion());
         platformCapabilities.setCapability("deviceName", platform.getDevice());
+        LOGGER.debug("Initialising AppiumDriver with capabilities : {}", platformCapabilities);
         return initializeDriverForMobilePlatform(platform, platformCapabilities);
     }
 
@@ -311,6 +312,7 @@ public class WebDriverFactory {
         platformCapabilities.setCapability("platformName", platform.getOs());
         platformCapabilities.setCapability("platformVersion", platform.getOsVersion());
         platformCapabilities.setCapability("deviceName", platform.getDevice());
+        LOGGER.debug("Initialising RemoteAppiumDriver with capabilities : {}", platformCapabilities);
         return initializeDriverForMobilePlatform(platform, platformCapabilities);
     }
 
@@ -347,7 +349,7 @@ public class WebDriverFactory {
             platformCapabilities.setCapability("browserstack.localIdentifier",
                     LocalFactory.getInstance().getLocalIdentifier());
         }
-        LOGGER.debug("Initialising RemoteWebDriver with capabilities : {}", platformCapabilities);
+        LOGGER.debug("Initialising RemoteAppiumDriver with capabilities : {}", platformCapabilities);
         return initializeDriverForMobilePlatform(platform, platformCapabilities);
     }
 
