@@ -1,39 +1,54 @@
 driverType: cloudDriver
 mobileAppTesting: true
 
-onPremGridDriver:
-  hubUrl: http://localhost:4723/wd/hub
-  app_hash_id:
-    ios: hash_id
-    android: hash_id
-  app_custom_id:
-    ios: custom_id
-    android: custom_id
+onPremDriver:
+  app:
+    ios_path: /path/to/ipa
+    android_path: /path/to/apk
   platforms:
     - name:
+      os: "Android",
+      os_version: "11.0"
+      device: "Google Pixel 4"
       capabilities:
-        platformName: "Android"
-        platformVersion: "11.0"
-        deviceName: "Google Pixel 4"
         appPackage: "com.browserstack.sampeapp"
         appActivity: "com.browserstack.sampeapp.MainActivity"
     - name:
+      os: "IOS",
+      os_version: "14",
+      device: "iPhone 11"
       capabilities:
-        platformName: "iOS"
-        platformVersion: "14"
-        deviceName: "iPhone 11" 
+        udid: "<udid>"
+
+onPremGridDriver:
+  hubUrl: http://localhost:4723/wd/hub
+  app:
+    ios_path: /path/to/ipa
+    android_path: /path/to/apk
+  platforms:
+    - name:
+      os: "Android",
+      os_version: "11.0"
+      device: "Google Pixel 4"
+      capabilities:
+        appPackage: "com.browserstack.sampeapp"
+        appActivity: "com.browserstack.sampeapp.MainActivity"
+    - name:
+      os: "IOS",
+      os_version: "14",
+      device: "iPhone 11"
+      capabilities:
+        udid: "<udid>" 
 
 cloudDriver:
   hubUrl: https://hub-cloud.browserstack.com/wd/hub
   user: BROWSERSTACK_USERNAME
   accessKey: BROWSERSTACK_ACCESSKEY
-  useApp: true
-  app_hash_id:
-    ios: hash_id
-    android: hash_id
-  app_custom_id:
-    ios: custom_id
-    android: custom_id
+  app:
+    ios_hash_id: <hash-id-ios>
+    android_hash_id: <hash-id-android>
+    ios_custom_id: <custom-id-ios>
+    android_custom_id: <custom-id-android>
   localTunnel:
     enabled: false
   common_capabilities:

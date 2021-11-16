@@ -26,11 +26,15 @@ import org.openqa.selenium.safari.SafariOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.browserstack.webdriver.config.BrowserType;
 import com.browserstack.webdriver.config.CommonCapabilities;
 import com.browserstack.webdriver.config.DriverType;
+import com.browserstack.webdriver.config.OnPremDriverConfig;
 import com.browserstack.webdriver.config.Platform;
 import com.browserstack.webdriver.config.RemoteDriverConfig;
 import com.browserstack.webdriver.config.WebDriverConfiguration;
@@ -65,10 +69,10 @@ public class WebDriverFactory {
     }
 
     private boolean isLocalTunnelEnabled() {
-        return webDriverConfiguration.getCloudDriverConfig() != null &&
-                 webDriverConfiguration.getCloudDriverConfig().getLocalTunnel() != null &&
-                 webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled() != null &&
-                 webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled();
+        return webDriverConfiguration.getCloudDriverConfig() != null
+                && webDriverConfiguration.getCloudDriverConfig().getLocalTunnel() != null
+                && webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled() != null
+                && webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled();
     }
 
     public static WebDriverFactory getInstance() {
@@ -98,13 +102,15 @@ public class WebDriverFactory {
 
     private void startLocalTunnel() {
         if (isLocalTunnelEnabled()) {
-            Map<String, String> localOptions = webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions();
+            Map<String, String> localOptions = webDriverConfiguration.getCloudDriverConfig().getLocalTunnel()
+                    .getLocalOptions();
             String accessKey = webDriverConfiguration.getCloudDriverConfig().getAccessKey();
             if (StringUtils.isNoneEmpty(System.getenv(BROWSERSTACK_ACCESS_KEY))) {
                 accessKey = System.getenv(BROWSERSTACK_ACCESS_KEY);
             }
             localOptions.put("key", accessKey);
-            LocalFactory.createInstance(webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions());
+            LocalFactory
+                    .createInstance(webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions());
         }
     }
 
@@ -113,14 +119,19 @@ public class WebDriverFactory {
         try {
             WebDriver webDriver = null;
             switch (this.webDriverConfiguration.getDriverType()) {
-                case onPremDriver:
-                    webDriver = createOnPremWebDriver(platform);
-                    break;
-                case onPremGridDriver:
-                    webDriver = createOnPremGridWebDriver(platform);
-                    break;
-                case cloudDriver:
-                    webDriver = createRemoteWebDriver(platform, testName);
+            case onPremDriver:
+                webDriver = this.webDriverConfiguration.isMobileAppTestingEnabled() ? createOnPremAppDriver(platform)
+                        : createOnPremWebDriver(platform);
+                break;
+            case onPremGridDriver:
+                webDriver = this.webDriverConfiguration.isMobileAppTestingEnabled()
+                        ? createOnPremGridAppDriver(platform)
+                        : createOnPremGridWebDriver(platform);
+                break;
+            case cloudDriver:
+                webDriver = this.webDriverConfiguration.isMobileAppTestingEnabled()
+                        ? createRemoteAppDriver(platform, testName)
+                        : createRemoteWebDriver(platform, testName);
             }
             return webDriver;
         } catch (MalformedURLException mae) {
@@ -184,93 +195,164 @@ public class WebDriverFactory {
         platformCapabilities.setCapability("browserstack.key", accessKey);
 
         if (isLocalTunnelEnabled()) {
-            platformCapabilities.setCapability("browserstack.localIdentifier", LocalFactory.getInstance().getLocalIdentifier());
+            platformCapabilities.setCapability("browserstack.localIdentifier",
+                    LocalFactory.getInstance().getLocalIdentifier());
         }
 
-        LOGGER.debug("Initialising RemoteWebDriver with capabilities : {}",platformCapabilities);
+        LOGGER.debug("Initialising RemoteWebDriver with capabilities : {}", platformCapabilities);
         return new RemoteWebDriver(new URL(remoteDriverConfig.getHubUrl()), platformCapabilities);
     }
 
     private WebDriver createOnPremGridWebDriver(Platform platform) throws MalformedURLException {
         DesiredCapabilities capabilities;
         switch (BrowserType.valueOf(platform.getBrowser().toUpperCase())) {
-            case CHROME:
-                capabilities = new DesiredCapabilities(new ChromeOptions());
-                break;
-            case FIREFOX:
-                capabilities = new DesiredCapabilities(new FirefoxOptions());
-                break;
-            default:
-                throw new RuntimeException("Unsupported Browser : " + platform.getBrowser());
+        case CHROME:
+            capabilities = new DesiredCapabilities(new ChromeOptions());
+            break;
+        case FIREFOX:
+            capabilities = new DesiredCapabilities(new FirefoxOptions());
+            break;
+        default:
+            throw new RuntimeException("Unsupported Browser : " + platform.getBrowser());
         }
         if (platform.getCapabilities() != null) {
             platform.getCapabilities().getCapabilityMap().forEach(capabilities::setCapability);
         }
-        LOGGER.debug("Initialising OnPremGridWebDriver with capabilities : {}",capabilities);
-        return new RemoteWebDriver(new URL(this.webDriverConfiguration.getOnPremGridDriverConfig().getHubUrl()), capabilities);
+        LOGGER.debug("Initialising OnPremGridWebDriver with capabilities : {}", capabilities);
+        return new RemoteWebDriver(new URL(this.webDriverConfiguration.getOnPremGridDriverConfig().getHubUrl()),
+                capabilities);
     }
 
     private WebDriver createOnPremWebDriver(Platform platform) {
         WebDriver webDriver = null;
         switch (BrowserType.valueOf(platform.getBrowser().toUpperCase())) {
-            case CHROME:
-                System.setProperty(WEBDRIVER_CHROME_DRIVER, Paths.get(platform.getDriverPath()).toString());
-                ChromeOptions chromeOptions = new ChromeOptions();
-                if (platform.getCapabilities() != null) {
-                    platform.getCapabilities().getCapabilityMap().forEach(chromeOptions::setCapability);
-                }
-                LOGGER.debug("Initialising ChromeDriver with capabilities : {}",chromeOptions);
-                webDriver = new ChromeDriver(chromeOptions);
-                break;
-            case FIREFOX:
-                System.setProperty(WEBDRIVER_GECKO_DRIVER, Paths.get(platform.getDriverPath()).toString());
-                FirefoxOptions firefoxOptions = new FirefoxOptions();
-                if (platform.getCapabilities() != null) {
-                    platform.getCapabilities().getCapabilityMap().forEach(firefoxOptions::setCapability);
-                }
-                LOGGER.debug("Initialising FirefoxDriver with capabilities : {}",firefoxOptions);
-                webDriver = new FirefoxDriver(firefoxOptions);
-                break;
-            case IE:
-                System.setProperty(WEBDRIVER_IE_DRIVER, Paths.get(platform.getDriverPath()).toString());
-                InternetExplorerOptions internetExplorerOptions = new InternetExplorerOptions();
-                if (platform.getCapabilities() != null) {
-                    platform.getCapabilities().getCapabilityMap().forEach(internetExplorerOptions::setCapability);
-                }
-                LOGGER.debug("Initialising InternetExplorerDriver with capabilities : {}",internetExplorerOptions);
-                webDriver = new InternetExplorerDriver(internetExplorerOptions);
-                break;
-            case EDGE:
-                System.setProperty(WEBDRIVER_EDGE_DRIVER, Paths.get(platform.getDriverPath()).toString());
-                EdgeOptions edgeOptions = new EdgeOptions();
-                if (platform.getCapabilities() != null) {
-                    platform.getCapabilities().getCapabilityMap().forEach(edgeOptions::setCapability);
-                }
-                LOGGER.debug("Initialising EdgeDriver with capabilities : {}",edgeOptions);
-                webDriver = new EdgeDriver(edgeOptions);
-                break;
-            case SAFARI:
-                SafariOptions safariOptions = new SafariOptions();
-                if (platform.getCapabilities() != null) {
-                    platform.getCapabilities().getCapabilityMap().forEach(safariOptions::setCapability);
-                }
-                LOGGER.debug("Initialising SafariDriver with capabilities : {}",safariOptions);
-                webDriver = new SafariDriver(safariOptions);
-                break;
-            case OPERA:
-                OperaOptions operaOptions = new OperaOptions();
-                if (platform.getCapabilities() != null) {
-                    platform.getCapabilities().getCapabilityMap().forEach(operaOptions::setCapability);
-                }
-                LOGGER.debug("Initialising OperaDriver with capabilities : {}",operaOptions);
-                webDriver = new OperaDriver(operaOptions);
-                break;
+        case CHROME:
+            System.setProperty(WEBDRIVER_CHROME_DRIVER, Paths.get(platform.getDriverPath()).toString());
+            ChromeOptions chromeOptions = new ChromeOptions();
+            if (platform.getCapabilities() != null) {
+                platform.getCapabilities().getCapabilityMap().forEach(chromeOptions::setCapability);
+            }
+            LOGGER.debug("Initialising ChromeDriver with capabilities : {}", chromeOptions);
+            webDriver = new ChromeDriver(chromeOptions);
+            break;
+        case FIREFOX:
+            System.setProperty(WEBDRIVER_GECKO_DRIVER, Paths.get(platform.getDriverPath()).toString());
+            FirefoxOptions firefoxOptions = new FirefoxOptions();
+            if (platform.getCapabilities() != null) {
+                platform.getCapabilities().getCapabilityMap().forEach(firefoxOptions::setCapability);
+            }
+            LOGGER.debug("Initialising FirefoxDriver with capabilities : {}", firefoxOptions);
+            webDriver = new FirefoxDriver(firefoxOptions);
+            break;
+        case IE:
+            System.setProperty(WEBDRIVER_IE_DRIVER, Paths.get(platform.getDriverPath()).toString());
+            InternetExplorerOptions internetExplorerOptions = new InternetExplorerOptions();
+            if (platform.getCapabilities() != null) {
+                platform.getCapabilities().getCapabilityMap().forEach(internetExplorerOptions::setCapability);
+            }
+            LOGGER.debug("Initialising InternetExplorerDriver with capabilities : {}", internetExplorerOptions);
+            webDriver = new InternetExplorerDriver(internetExplorerOptions);
+            break;
+        case EDGE:
+            System.setProperty(WEBDRIVER_EDGE_DRIVER, Paths.get(platform.getDriverPath()).toString());
+            EdgeOptions edgeOptions = new EdgeOptions();
+            if (platform.getCapabilities() != null) {
+                platform.getCapabilities().getCapabilityMap().forEach(edgeOptions::setCapability);
+            }
+            LOGGER.debug("Initialising EdgeDriver with capabilities : {}", edgeOptions);
+            webDriver = new EdgeDriver(edgeOptions);
+            break;
+        case SAFARI:
+            SafariOptions safariOptions = new SafariOptions();
+            if (platform.getCapabilities() != null) {
+                platform.getCapabilities().getCapabilityMap().forEach(safariOptions::setCapability);
+            }
+            LOGGER.debug("Initialising SafariDriver with capabilities : {}", safariOptions);
+            webDriver = new SafariDriver(safariOptions);
+            break;
+        case OPERA:
+            OperaOptions operaOptions = new OperaOptions();
+            if (platform.getCapabilities() != null) {
+                platform.getCapabilities().getCapabilityMap().forEach(operaOptions::setCapability);
+            }
+            LOGGER.debug("Initialising OperaDriver with capabilities : {}", operaOptions);
+            webDriver = new OperaDriver(operaOptions);
+            break;
         }
         return webDriver;
     }
 
+    private WebDriver createOnPremAppDriver(Platform platform) throws MalformedURLException {
+        DesiredCapabilities platformCapabilities = new DesiredCapabilities();
+        OnPremDriverConfig onPremDriverConfig = this.webDriverConfiguration.getOnPremDriverConfig();
+        String app = onPremDriverConfig.getAppConfig().getApp(platform.getOs(), this.getDriverType());
+        if (platform.getCapabilities() != null) {
+            platform.getCapabilities().getCapabilityMap().forEach(platformCapabilities::setCapability);
+        }
+        platformCapabilities.setCapability("app", app);
+        platformCapabilities.setCapability("platformName", platform.getOs());
+        platformCapabilities.setCapability("platformVersion", platform.getOsVersion());
+        platformCapabilities.setCapability("deviceName", platform.getDevice());
+        return initializeDriverForMobilePlatform(platform, platformCapabilities);
+    }
+
+    private WebDriver createOnPremGridAppDriver(Platform platform) throws MalformedURLException {
+        RemoteDriverConfig remoteDriverConfig = this.webDriverConfiguration.getCloudDriverConfig();
+        CommonCapabilities commonCapabilities = remoteDriverConfig.getCommonCapabilities();
+        DesiredCapabilities platformCapabilities = new DesiredCapabilities();
+        String app = remoteDriverConfig.getAppConfig().getApp(platform.getOs(), this.getDriverType());
+        if (commonCapabilities.getCapabilities() != null) {
+            commonCapabilities.getCapabilities().getCapabilityMap().forEach(platformCapabilities::setCapability);
+        }
+        if (platform.getCapabilities() != null) {
+            platform.getCapabilities().getCapabilityMap().forEach(platformCapabilities::setCapability);
+        }
+        platformCapabilities.setCapability("app", app);
+        platformCapabilities.setCapability("platformName", platform.getOs());
+        platformCapabilities.setCapability("platformVersion", platform.getOsVersion());
+        platformCapabilities.setCapability("deviceName", platform.getDevice());
+        return initializeDriverForMobilePlatform(platform, platformCapabilities);
+    }
+
+    private WebDriver createRemoteAppDriver(Platform platform, String testName) throws MalformedURLException {
+        RemoteDriverConfig remoteDriverConfig = this.webDriverConfiguration.getCloudDriverConfig();
+        CommonCapabilities commonCapabilities = remoteDriverConfig.getCommonCapabilities();
+        DesiredCapabilities platformCapabilities = new DesiredCapabilities();
+        String app = remoteDriverConfig.getAppConfig().getApp(platform.getOs(), this.getDriverType());
+        if (commonCapabilities.getCapabilities() != null) {
+            commonCapabilities.getCapabilities().getCapabilityMap().forEach(platformCapabilities::setCapability);
+        }
+        if (platform.getCapabilities() != null) {
+            platform.getCapabilities().getCapabilityMap().forEach(platformCapabilities::setCapability);
+        }
+        platformCapabilities.setCapability("app", app);
+        platformCapabilities.setCapability("os", platform.getOs());
+        platformCapabilities.setCapability("os_version", platform.getOsVersion());
+        platformCapabilities.setCapability("device", platform.getDevice());
+        platformCapabilities.setCapability("name", testName);
+        platformCapabilities.setCapability("project", commonCapabilities.getProject());
+        platformCapabilities.setCapability("build", createBuildName(commonCapabilities.getBuildPrefix()));
+        String user = remoteDriverConfig.getUser();
+        if (StringUtils.isNoneEmpty(System.getenv(BROWSERSTACK_USERNAME))) {
+            user = System.getenv(BROWSERSTACK_USERNAME);
+        }
+        String accessKey = remoteDriverConfig.getAccessKey();
+        if (StringUtils.isNoneEmpty(System.getenv(BROWSERSTACK_ACCESS_KEY))) {
+            accessKey = System.getenv(BROWSERSTACK_ACCESS_KEY);
+        }
+        platformCapabilities.setCapability("browserstack.user", user);
+        platformCapabilities.setCapability("browserstack.key", accessKey);
+
+        if (isLocalTunnelEnabled()) {
+            platformCapabilities.setCapability("browserstack.localIdentifier",
+                    LocalFactory.getInstance().getLocalIdentifier());
+        }
+        LOGGER.debug("Initialising RemoteWebDriver with capabilities : {}", platformCapabilities);
+        return initializeDriverForMobilePlatform(platform, platformCapabilities);
+    }
+
     private String createBuildName(String buildPrefix) {
-        if(StringUtils.isNotEmpty(System.getenv(DEFAULT_BUILD_ENV_NAME))){
+        if (StringUtils.isNotEmpty(System.getenv(DEFAULT_BUILD_ENV_NAME))) {
             return System.getenv(DEFAULT_BUILD_ENV_NAME);
         }
         if (StringUtils.isEmpty(buildPrefix)) {
@@ -285,4 +367,23 @@ public class WebDriverFactory {
         return buildName + "-" + buildSuffix;
     }
 
+    private WebDriver initializeDriverForMobilePlatform(Platform platform, DesiredCapabilities platformCapabilities)
+            throws MalformedURLException {
+        String hubUrl = "";
+        if (this.webDriverConfiguration.getDriverType() == DriverType.cloudDriver) {
+            hubUrl = this.webDriverConfiguration.getCloudDriverConfig().getHubUrl();
+        } else if (this.webDriverConfiguration.getDriverType() == DriverType.onPremGridDriver) {
+            hubUrl = this.webDriverConfiguration.getOnPremGridDriverConfig().getHubUrl();
+        }
+        switch (platform.getOs().toLowerCase()) {
+        case "android":
+            return StringUtils.isEmpty(hubUrl) ? new AndroidDriver<>(platformCapabilities)
+                    : new AndroidDriver<>(new URL(hubUrl), platformCapabilities);
+        case "ios":
+            return StringUtils.isEmpty(hubUrl) ? new IOSDriver<>(platformCapabilities)
+                    : new IOSDriver<>(new URL(hubUrl), platformCapabilities);
+        default:
+            throw new RuntimeException("Unsupported Operating System : " + platform.getOs());
+        }
+    }
 }

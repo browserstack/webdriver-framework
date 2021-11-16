@@ -19,6 +19,8 @@ public class RemoteDriverConfig {
 
     private List<Platform> platforms;
 
+    private AppConfig app;
+
     public String getHubUrl() {
         return hubUrl;
     }
@@ -65,5 +67,9 @@ public class RemoteDriverConfig {
 
     public void setPlatforms(List<Platform> platforms) {
         this.platforms = platforms;
+    }
+
+    public AppConfig getAppConfig(){
+        return app;
     }
 }

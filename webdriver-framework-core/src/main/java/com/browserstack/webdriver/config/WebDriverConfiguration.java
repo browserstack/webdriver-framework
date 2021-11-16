@@ -17,6 +17,8 @@ public class WebDriverConfiguration {
 
     private DriverType driverType;
 
+    private boolean mobileAppTesting;
+
     @JsonProperty("onPremDriver")
     private OnPremDriverConfig onPremDriverConfig;
 
@@ -96,5 +98,9 @@ public class WebDriverConfiguration {
             return "";
         }
         return this.namedTestUrls.get(name);
+    }
+
+    public boolean isMobileAppTestingEnabled(){
+        return mobileAppTesting;
     }
 }
