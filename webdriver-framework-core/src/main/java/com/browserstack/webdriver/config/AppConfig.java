@@ -1,19 +1,27 @@
 package com.browserstack.webdriver.config;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class AppConfig {
-    private String ios_hash_id;
-    private String android_hash_id;
-    private String ios_custom_id;
-    private String android_custom_id;
-    private String ios_path;
-    private String android_path;
+    @JsonProperty("ios_hash_id")
+    private String iosHashId;
+    @JsonProperty("android_hash_id")
+    private String androidHashId;
+    @JsonProperty("ios_custom_id")
+    private String iosCustomId;
+    @JsonProperty("android_custom_id")
+    private String androidCustomId;
+    @JsonProperty("ios_path")
+    private String iosPath;
+    @JsonProperty("android_path")
+    private String androidPath;
 
     public String getApp(String os, DriverType driverType) {
         if (driverType == DriverType.cloudDriver) {
-            String hashId = this.getHashId(os);
-            String customId = this.getCustomId(os);
+            String hashId = this.getHashId(os.toLowerCase());
+            String customId = this.getCustomId(os.toLowerCase());
             return StringUtils.isEmpty(hashId) ? customId : hashId;
         } else {
             return this.getAppPath(os.toLowerCase());
@@ -23,9 +31,9 @@ public class AppConfig {
     private String getHashId(String os) {
         switch (os) {
         case "android":
-            return android_hash_id;
+            return androidHashId;
         case "ios":
-            return ios_hash_id;
+            return iosHashId;
         default:
             throw new RuntimeException("Unsupported Operating System : " + os);
         }
@@ -34,9 +42,9 @@ public class AppConfig {
     private String getCustomId(String os) {
         switch (os) {
         case "android":
-            return android_custom_id;
+            return androidCustomId;
         case "ios":
-            return ios_custom_id;
+            return iosCustomId;
         default:
             throw new RuntimeException("Unsupported Operating System : " + os);
         }
@@ -45,9 +53,9 @@ public class AppConfig {
     private String getAppPath(String os) {
         switch (os) {
         case "android":
-            return android_path;
+            return androidPath;
         case "ios":
-            return ios_path;
+            return iosPath;
         default:
             throw new RuntimeException("Unsupported Operating System : " + os);
         }

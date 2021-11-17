@@ -19,6 +19,7 @@ public class RemoteDriverConfig {
 
     private List<Platform> platforms;
 
+    @JsonProperty("app")
     private AppConfig app;
 
     public String getHubUrl() {

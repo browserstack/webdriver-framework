@@ -2,9 +2,13 @@ package com.browserstack.webdriver.config;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class OnPremDriverConfig {
 
     private List<Platform> platforms;
+
+    @JsonProperty("app")
     private AppConfig app;
 
     public List<Platform> getPlatforms() {

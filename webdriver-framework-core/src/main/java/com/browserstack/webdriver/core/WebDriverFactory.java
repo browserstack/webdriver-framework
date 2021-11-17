@@ -328,7 +328,6 @@ public class WebDriverFactory {
             platform.getCapabilities().getCapabilityMap().forEach(platformCapabilities::setCapability);
         }
         platformCapabilities.setCapability("app", app);
-        platformCapabilities.setCapability("os", platform.getOs());
         platformCapabilities.setCapability("os_version", platform.getOsVersion());
         platformCapabilities.setCapability("device", platform.getDevice());
         platformCapabilities.setCapability("name", testName);

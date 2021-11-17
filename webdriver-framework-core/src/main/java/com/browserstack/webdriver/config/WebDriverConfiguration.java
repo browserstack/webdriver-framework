@@ -17,6 +17,7 @@ public class WebDriverConfiguration {
 
     private DriverType driverType;
 
+    @JsonProperty("mobileAppTesting")
     private boolean mobileAppTesting;
 
     @JsonProperty("onPremDriver")
