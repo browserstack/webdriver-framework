@@ -7,18 +7,18 @@ onPremDriver:
     android_path: /path/to/apk
   platforms:
     - name:
-      os: "Android",
-      os_version: "11.0"
-      device: "Google Pixel 4"
+      os: Android,
+      os_version: 11.0
+      device: Google Pixel 4
       capabilities:
-        appPackage: "com.browserstack.sampeapp"
-        appActivity: "com.browserstack.sampeapp.MainActivity"
+        appPackage: com.browserstack.sampeapp
+        appActivity: com.browserstack.sampeapp.MainActivity
     - name:
-      os: "IOS",
-      os_version: "14",
-      device: "iPhone 11"
+      os: IOS,
+      os_version: 14,
+      device: iPhone 11
       capabilities:
-        udid: "<udid>"
+        udid: <udid>
 
 onPremGridDriver:
   hubUrl: http://localhost:4723/wd/hub
@@ -27,18 +27,18 @@ onPremGridDriver:
     android_path: /path/to/apk
   platforms:
     - name:
-      os: "Android",
-      os_version: "11.0"
-      device: "Google Pixel 4"
+      os: Android,
+      os_version: 11.0
+      device: Google Pixel 4
       capabilities:
-        appPackage: "com.browserstack.sampeapp"
-        appActivity: "com.browserstack.sampeapp.MainActivity"
+        appPackage: com.browserstack.sampeapp
+        appActivity: com.browserstack.sampeapp.MainActivity
     - name:
-      os: "IOS",
-      os_version: "14",
-      device: "iPhone 11"
+      os: IOS,
+      os_version: 14,
+      device: iPhone 11
       capabilities:
-        udid: "<udid>" 
+        udid: <udid> 
 
 cloudDriver:
   hubUrl: https://hub-cloud.browserstack.com/wd/hub
@@ -61,19 +61,19 @@ cloudDriver:
   platforms:
     - name: IOS - iPhone 11
       os: iOS
-      os_version: '14'
-      device: "iPhone 11"
+      os_version: 14
+      device: iPhone 11
       capabilities:
         browserstack.appium_version: 1.21.0
     - name: Android  - Pixel 5
       os: Android
-      os_version: '12'
-      device: "Google Pixel 5"
+      os_version: 12
+      device: Google Pixel 5
       capabilities:
         browserstack.appium_version: 1.21.0
     - name: Android  - Samsung galaxy S21
       os: Android
-      os_version: '11.0'
-      device: "Samsung Galaxy S21"
+      os_version: 11.0
+      device: Samsung Galaxy S21
       capabilities:
         browserstack.appium_version: 1.21.0
