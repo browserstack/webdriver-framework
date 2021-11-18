@@ -8,7 +8,6 @@
         <groupId>com.browserstack</groupId>
         <artifactId>webdriver-framework</artifactId>
         <version>0.0.1</version>
-         <relativePath />
     </parent>
 
     <artifactId>webdriver-framework-core</artifactId>
