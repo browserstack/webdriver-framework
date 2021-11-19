@@ -2,10 +2,16 @@ package com.browserstack.webdriver.junit5.extensions;
 
 import com.browserstack.webdriver.config.DriverType;
 import com.browserstack.webdriver.core.WebDriverFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
@@ -14,8 +20,12 @@ import java.util.Optional;
  * <p>{@code WebDriverTestWatcher} methods are called after a test has been skipped or executed.</p>
  */
 public class WebDriverTestWatcher implements TestWatcher {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebDriverTestWatcher.class);
+    private static final String TEST_PASS_REASON = "Test Passed";
+    private static final String TEST_PASS_STATUS = "passed";
+    private static final String TEST_FAIL_STATUS = "failed";
 
-    private static final String TEST_STATUS_SCRIPT = "browserstack_executor: {\"action\": \"setSessionStatus\", \"arguments\": {\"status\": \"%s\", \"reason\": \"%s\"}}";
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * Invoked after a disabled test has been skipped.
@@ -38,7 +48,7 @@ public class WebDriverTestWatcher implements TestWatcher {
      */
     @Override
     public void testSuccessful(ExtensionContext context) {
-        markAndCloseWebDriver(context, "passed", "Test passed");
+        markAndCloseWebDriver(context, TEST_PASS_STATUS, TEST_PASS_REASON);
     }
 
     /**
@@ -51,7 +61,7 @@ public class WebDriverTestWatcher implements TestWatcher {
      */
     @Override
     public void testAborted(ExtensionContext context, Throwable cause) {
-        markAndCloseWebDriver(context, "failed", cause.getMessage());
+        markAndCloseWebDriver(context, TEST_FAIL_STATUS, cause.getMessage());
     }
 
     /**
@@ -64,7 +74,7 @@ public class WebDriverTestWatcher implements TestWatcher {
      */
     @Override
     public void testFailed(ExtensionContext context, Throwable cause) {
-        markAndCloseWebDriver(context, "failed", cause.getMessage());
+        markAndCloseWebDriver(context, TEST_FAIL_STATUS, cause.getMessage());
     }
 
     /**
@@ -79,12 +89,43 @@ public class WebDriverTestWatcher implements TestWatcher {
         WebDriver webDriver = context.getStore(WebDriverParameterResolver.STORE_NAMESPACE).get(testName, WebDriver.class);
         try {
             if (WebDriverFactory.getInstance().getDriverType().equals(DriverType.cloudDriver)) {
-                ((JavascriptExecutor) webDriver).executeScript(String.format(TEST_STATUS_SCRIPT, status, reason));
+                String script = createExecutorScript(status, reason);
+                LOGGER.debug("Script to execute:: {}", script);
+                if (StringUtils.isNotEmpty(script)) {
+                    ((JavascriptExecutor) webDriver).executeScript(script);
+                }
             }
         } finally {
             if (webDriver != null) {
                 webDriver.quit();
             }
         }
+    }
+
+    private String createExecutorScript(String status, String reason) {
+        ObjectNode rootNode = objectMapper.createObjectNode();
+        ObjectNode argumentsNode = objectMapper.createObjectNode();
+
+        // Read only the first line of the error message
+        reason = reason.split("\n")[0];
+        // Limit the error message to only 255 characters
+        if (reason.length() >= 255) {
+            reason = reason.substring(0, 255);
+        }
+        // Replacing all the special characters with whitespace
+        reason.replaceAll("^[^a-zA-Z0-9]"," ");
+
+        argumentsNode.put("status", status);
+        argumentsNode.put("reason", reason);
+
+        rootNode.put("action", "setSessionStatus");
+        rootNode.set("arguments", argumentsNode);
+        String executorStr = "";
+        try {
+            executorStr = objectMapper.writeValueAsString(rootNode);
+        } catch (JsonProcessingException e) {
+            throw new Error("Error creating JSON object for Marking tests", e);
+        }
+        return "browserstack_executor: " + executorStr;
     }
 }
