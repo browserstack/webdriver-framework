@@ -81,6 +81,8 @@ public class WebDriverProviderRule extends TestWatcher {
         if (reason.length() >= 255) {
             reason = reason.substring(0, 255);
         }
+        // Replacing all the special characters with whitespace
+        reason.replaceAll("^[^a-zA-Z0-9]"," ");
 
         argumentsNode.put("status", status);
         argumentsNode.put("reason", reason);
