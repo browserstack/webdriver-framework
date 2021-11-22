@@ -11,8 +11,8 @@ onPremDriver:
       os_version: 11.0
       device: Google Pixel 4
       capabilities:
-        appPackage: com.browserstack.sampeapp
-        appActivity: com.browserstack.sampeapp.MainActivity
+        appPackage: com.browserstack.sampleapp
+        appActivity: com.browserstack.sampleapp.MainActivity
     - name:
       os: IOS,
       os_version: 14,
@@ -31,8 +31,8 @@ onPremGridDriver:
       os_version: 11.0
       device: Google Pixel 4
       capabilities:
-        appPackage: com.browserstack.sampeapp
-        appActivity: com.browserstack.sampeapp.MainActivity
+        appPackage: com.browserstack.sampleapp
+        appActivity: com.browserstack.sampleapp.MainActivity
     - name:
       os: IOS,
       os_version: 14,
