@@ -20,11 +20,11 @@ public class AppConfig {
 
     public String getApp(String os, DriverType driverType) {
         if (driverType == DriverType.cloudDriver) {
-            String hashId = this.getHashId(os.toLowerCase());
-            String customId = this.getCustomId(os.toLowerCase());
+            String hashId = this.getHashId(os);
+            String customId = this.getCustomId(os);
             return StringUtils.isEmpty(hashId) ? customId : hashId;
         } else {
-            return this.getAppPath(os.toLowerCase());
+            return this.getAppPath(os);
         }
     }
 
