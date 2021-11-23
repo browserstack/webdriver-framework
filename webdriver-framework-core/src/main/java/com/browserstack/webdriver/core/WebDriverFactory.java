@@ -35,6 +35,7 @@ import com.browserstack.webdriver.config.BrowserType;
 import com.browserstack.webdriver.config.CommonCapabilities;
 import com.browserstack.webdriver.config.DriverType;
 import com.browserstack.webdriver.config.OnPremDriverConfig;
+import com.browserstack.webdriver.config.DeviceType;
 import com.browserstack.webdriver.config.Platform;
 import com.browserstack.webdriver.config.RemoteDriverConfig;
 import com.browserstack.webdriver.config.WebDriverConfiguration;
@@ -376,11 +377,11 @@ public class WebDriverFactory {
         } else if (this.webDriverConfiguration.getDriverType() == DriverType.onPremGridDriver) {
             hubUrl = this.webDriverConfiguration.getOnPremGridDriverConfig().getHubUrl();
         }
-        switch (platform.getOs().toLowerCase()) {
-        case "android":
+        switch (DeviceType.valueOf(platform.getOs().toUpperCase())) {
+        case ANDROID:
             return StringUtils.isEmpty(hubUrl) ? new AndroidDriver<>(platformCapabilities)
                     : new AndroidDriver<>(new URL(hubUrl), platformCapabilities);
-        case "ios":
+        case IOS:
             return StringUtils.isEmpty(hubUrl) ? new IOSDriver<>(platformCapabilities)
                     : new IOSDriver<>(new URL(hubUrl), platformCapabilities);
         default:

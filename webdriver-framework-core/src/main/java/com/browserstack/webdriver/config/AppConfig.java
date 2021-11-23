@@ -29,10 +29,10 @@ public class AppConfig {
     }
 
     private String getHashId(String os) {
-        switch (os) {
-        case "android":
+        switch (DeviceType.valueOf(os.toUpperCase())) {
+        case ANDROID:
             return androidHashId;
-        case "ios":
+        case IOS:
             return iosHashId;
         default:
             throw new RuntimeException("Unsupported Operating System : " + os);
@@ -40,10 +40,10 @@ public class AppConfig {
     }
 
     private String getCustomId(String os) {
-        switch (os) {
-        case "android":
+        switch (DeviceType.valueOf(os.toUpperCase())) {
+        case ANDROID:
             return androidCustomId;
-        case "ios":
+        case IOS:
             return iosCustomId;
         default:
             throw new RuntimeException("Unsupported Operating System : " + os);
@@ -51,10 +51,10 @@ public class AppConfig {
     }
 
     private String getAppPath(String os) {
-        switch (os) {
-        case "android":
+        switch (DeviceType.valueOf(os.toUpperCase())) {
+        case ANDROID:
             return androidPath;
-        case "ios":
+        case IOS:
             return iosPath;
         default:
             throw new RuntimeException("Unsupported Operating System : " + os);
