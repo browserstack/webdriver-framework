@@ -1,10 +1,10 @@
-# Webdriver Framework Core
+# AppiumDriver Framework Core
 
-Webdriver Framework Core is a loosely coupled module which incorporates the following:
+AppiumDriver Framework Core is a loosely coupled module which incorporates the following:
 
 * Parses the external configuration files
 * Initialize webdriver instances based on the configuration
-* Provides APIs to inject the Webdriver instances in your tests
+* Provides APIs to inject the AppiumDriver instances in your tests
 
 ## Parses the external configuration files
 
@@ -63,8 +63,8 @@ cloudDriver:
 
 ## Initialize webdriver instances based on the configuration
 
-The [WebDriverFactory](src/main/java/com/browserstack/webdriver/core/WebDriverFactory.java) class looks for environment variable named "capabilities.config" which should be pointing to the file to be used. Further the class parses the file and initialises the [WebDriverConfiguration](src/main/java/com/browserstack/webdriver/config/WebDriverConfiguration.java) class
+The [AppiumDriverFactory](src/main/java/com/browserstack/webdriver/core/AppiumDriverFactory.java) class looks for environment variable named "capabilities.config" which should be pointing to the file to be used. Further the class parses the file and initialises the [AppiumDriverConfiguration](src/main/java/com/browserstack/webdriver/config/AppiumDriverConfiguration.java) class
 
-## Provides APIs to inject the Webdriver instances in your tests
+## Provides APIs to inject the AppiumDriver instances in your tests
 
-Make use of `createWebDriverForPlatform` method inside your framework to inject the webdriver into your respective test instances.
+Make use of `createAppiumDriverForPlatform` method inside your framework to inject the webdriver into your respective test instances.

@@ -22,21 +22,21 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <junit4.version>4.12</junit4.version>
-        <selenium.version>3.141.59</selenium.version>
+        <junit4.version>4.13.1</junit4.version>
+        <appium.version>7.6.0</appium.version>
     </properties>
 
     <dependencies>
         <dependency>
+            <groupId>io.appium</groupId>
+            <artifactId>java-client</artifactId>
+            <version>${appium.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.browserstack</groupId>
             <artifactId>appiumdriver-framework-core</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>${selenium.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

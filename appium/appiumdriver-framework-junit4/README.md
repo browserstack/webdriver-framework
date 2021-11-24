@@ -1,6 +1,6 @@
-# Webdriver Framework JUnit4
+# AppiumDriver Framework JUnit4
 
-A library that contains the glue code and the necessary instructions for using webdriver-framework-core with the JUnit4 hooks. This library also contains JUnit4 specific code for managing the lifecycle of the WebDriver with Test Method.
+A library that contains the glue code and the necessary instructions for using webdriver-framework-core with the JUnit4 hooks. This library also contains JUnit4 specific code for managing the lifecycle of the AppiumDriver with Test Method.
 
 ## Integration Instructions
 
@@ -16,14 +16,14 @@ This is the JUnit4 specific framework library intended to be used by developers 
 </dependency>
 ```
 
-2. <b>Create Webdriver Test</b>: Create your test methods with Webdriver as a parameter.
+2. <b>Create AppiumDriver Test</b>: Create your test methods with AppiumDriver as a parameter.
 
 ```java
-public class SampleTest extends AbstractWebDriverTest {
+public class SampleTest extends AbstractAppiumDriverTest {
 
     @Test
     public void test () {
-        WebDriver webDriver = this.webDriverProviderRule.getWebDriver(platform);
+        AppiumDriver<?> appiumDriver = this.appiumDriverProviderRule.getAppiumDriver(platform);
         ...
    }
 
@@ -34,21 +34,21 @@ public class SampleTest extends AbstractWebDriverTest {
 
 ```java
 @RunWith(Parameterized.class)
-public class SampleTest extends AbstractWebDriverTest {
+public class SampleTest extends AbstractAppiumDriverTest {
 
     @Test
     public void test () {
-        WebDriver webDriver = this.webDriverProviderRule.getWebDriver(platform);
+        AppiumDriver<?> appiumDriver = this.appiumDriverProviderRule.getAppiumDriver(platform);
         ...
    }
 
 }
 ```
 
-4. <b>To ensure that the WebDriver instances are stopped when the test is completed, a Test Watcher is provided as part of this library</b>
+4. <b>To ensure that the AppiumDriver instances are stopped when the test is completed, a Test Watcher is provided as part of this library</b>
 
 The TestWatcher class is responsible for,
 
 - Marking the tests as pass/fail along with the appropriate error messages.
 
-- Quitting the WebDriver instance such that the test session on BrowserStack also is ended cleanly.
+- Quitting the AppiumDriver instance such that the test session on BrowserStack also is ended cleanly.
