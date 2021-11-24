@@ -8,7 +8,7 @@ AppiumDriver Framework Core is a loosely coupled module which incorporates the f
 
 ## Parses the external configuration files
 
-This repository allows you to use configuration files similar to the following to run your appiumdriver tests on various platforms including on-premise browsers, browsers running on a remote selenium grid such as [BrowserStack Automate](https://www.browserstack.com/automate) or in a [Docker container](https://github.com/SeleniumHQ/docker-selenium). 
+This repository allows you to use configuration files similar to the following to run your appiumdriver tests on various platforms including on-premise browsers, browsers running on a remote appium grid such as [BrowserStack Automate](https://www.browserstack.com/automate) or in a [Docker container](https://github.com/SeleniumHQ/docker-selenium). 
 
 ```yml
 
