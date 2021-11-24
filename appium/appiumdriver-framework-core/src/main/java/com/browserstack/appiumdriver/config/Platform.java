@@ -2,6 +2,8 @@ package com.browserstack.appiumdriver.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Platform {
 
     private String name;
@@ -11,15 +13,7 @@ public class Platform {
     @JsonProperty("os_version")
     private String osVersion;
 
-    private String browser;
-
-    @JsonProperty("browser_version")
-    private String browserVersion;
-
     private String device;
-
-    @JsonProperty("real_mobile")
-    private Boolean realMobile;
 
     private Capabilities capabilities;
 
@@ -32,6 +26,9 @@ public class Platform {
     }
 
     public String getOs() {
+        if(StringUtils.isEmpty(os)){
+            throw new NullPointerException("OS is not defined. Please define 'os' in config file.");
+        }
         return os;
     }
 
@@ -47,23 +44,10 @@ public class Platform {
         this.osVersion = osVersion;
     }
 
-    public String getBrowser() {
-        return browser;
-    }
-
-    public void setBrowser(String browser) {
-        this.browser = browser;
-    }
-
-    public String getBrowserVersion() {
-        return browserVersion;
-    }
-
-    public void setBrowserVersion(String browserVersion) {
-        this.browserVersion = browserVersion;
-    }
-
     public String getDevice() {
+        if(StringUtils.isEmpty(device)){
+            throw new NullPointerException("Device is not defined. Please define 'device' in config file.");
+        }
         return device;
     }
 
