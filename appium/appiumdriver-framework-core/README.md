@@ -11,22 +11,53 @@ AppiumDriver Framework Core is a loosely coupled module which incorporates the f
 This repository allows you to use configuration files similar to the following to run your webdriver tests on various platforms including on-premise browsers, browsers running on a remote selenium grid such as [BrowserStack Automate](https://www.browserstack.com/automate) or in a [Docker container](https://github.com/SeleniumHQ/docker-selenium). 
 
 ```yml
-testEndpoint: https://bstackdemo.com
-namedTestUrls:
-  url_one: https://www.google.com
-  url_two: https://www.yahoo.com
-#driverType: onPremDriver
+
 driverType: cloudDriver
+
 onPremDriver:
+  app:
+    ios_path: /path/to/ipa
+    android_path: /path/to/apk
   platforms:
-    - name: chrome
-      driverPath: src/test/resources/chromedriver
-    - name: safari
-      driverPath: src/test/resources/safaridriver
+    - name:
+      os: Android,
+      os_version: 11.0
+      device: Google Pixel 4
+      capabilities:
+        appPackage: com.browserstack.sampleapp
+        appActivity: com.browserstack.sampleapp.MainActivity
+    - name:
+      os: IOS,
+      os_version: 14
+      device: iPhone 11
+      capabilities:
+        udid: <udid>
+
+onPremGridDriver:
+  hubUrl: http://localhost:4723/wd/hub
+  app:
+    ios_path: /path/to/ipa
+    android_path: /path/to/apk
+  platforms:
+    - name:
+      os: Android
+      os_version: 11.0
+      device: Google Pixel 4
+      capabilities:
+        appPackage: com.browserstack.sampleapp
+        appActivity: com.browserstack.sampleapp.MainActivity
+    - name:
+      os: IOS,
+      os_version: 14
+      device: iPhone 11
+      capabilities:
+        udid: <udid> 
+        
 cloudDriver:
   hubUrl: https://hub-cloud.browserstack.com/wd/hub
-  user: BROWSERSTACK_USERNAME
-  accessKey: BROWSERSTACK_ACCESSKEY
+  app:
+    android_hash_id: <hash-id>
+    ios_custom_id: <custom-id> | <custom-sharable-id>
   localTunnel:
     enabled: false
   common_capabilities:
@@ -37,28 +68,19 @@ cloudDriver:
       browserstack.networkLogs: true
       browserstack.console: debug
   platforms:
-    - name: Win10_IE11
-      os: Windows
-      os_version: '10'
-      browser: Internet Explorer
-      browser_version: '11.0'
+    - name: IOS - iPhone 12
+      os: iOS
+      os_version: 14
+      device: iPhone 12
       capabilities:
-        browserstack.ie.arch: x32
-        browserstack.selenium_version: 3.141.59
-    - name: Win10_Chrome_Latest-1
-      os: Windows
-      os_version: '10'
-      browser: Chrome
-      browser_version: latest-1
+        browserstack.appium_version: 1.21.0
+    - name: Android  - Pixel 3
+      os: Android
+      os_version: 10
+      device: "Google Pixel 3"
       capabilities:
-        browserstack.selenium_version: 3.141.59
-    - name: OSX_BigSur_Chrome_Latest
-      os: OS X
-      os_version: Big Sur
-      browser: Chrome
-      browser_version: latest
-      capabilities:
-        browserstack.selenium_version: 3.141.59
+        browserstack.appium_version: 1.21.0
+
 ```
 
 ## Initialize webdriver instances based on the configuration
