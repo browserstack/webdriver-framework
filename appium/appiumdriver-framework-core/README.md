@@ -3,12 +3,12 @@
 AppiumDriver Framework Core is a loosely coupled module which incorporates the following:
 
 * Parses the external configuration files
-* Initialize webdriver instances based on the configuration
+* Initialize appiumdriver instances based on the configuration
 * Provides APIs to inject the AppiumDriver instances in your tests
 
 ## Parses the external configuration files
 
-This repository allows you to use configuration files similar to the following to run your webdriver tests on various platforms including on-premise browsers, browsers running on a remote selenium grid such as [BrowserStack Automate](https://www.browserstack.com/automate) or in a [Docker container](https://github.com/SeleniumHQ/docker-selenium). 
+This repository allows you to use configuration files similar to the following to run your appiumdriver tests on various platforms including on-premise browsers, browsers running on a remote selenium grid such as [BrowserStack Automate](https://www.browserstack.com/automate) or in a [Docker container](https://github.com/SeleniumHQ/docker-selenium). 
 
 ```yml
 
@@ -83,10 +83,10 @@ cloudDriver:
 
 ```
 
-## Initialize webdriver instances based on the configuration
+## Initialize Appium Driver instances based on the configuration
 
-The [AppiumDriverFactory](src/main/java/com/browserstack/webdriver/core/AppiumDriverFactory.java) class looks for environment variable named "capabilities.config" which should be pointing to the file to be used. Further the class parses the file and initialises the [AppiumDriverConfiguration](src/main/java/com/browserstack/webdriver/config/AppiumDriverConfiguration.java) class
+The [AppiumDriverFactory](src/main/java/com/browserstack/appiumdriver/core/AppiumDriverFactory.java) class looks for environment variable named "capabilities.config" which should be pointing to the file to be used. Further the class parses the file and initialises the [AppiumDriverConfiguration](src/main/java/com/browserstack/appiumdriver/config/AppiumDriverConfiguration.java) class
 
 ## Provides APIs to inject the AppiumDriver instances in your tests
 
-Make use of `createAppiumDriverForPlatform` method inside your framework to inject the webdriver into your respective test instances.
+Make use of `createAppiumDriverForPlatform` method inside your framework to inject the appiumdriver into your respective test instances.

@@ -1,6 +1,6 @@
 # AppiumDriver Framework TestNG
 
-A library that contains the glue code and the necessary instructions for using webdriver-framework-core with the TestNG hooks. This library also contains TestNG specific code for managing the lifecycle of the AppiumDriver with Test Method.
+A library that contains the glue code and the necessary instructions for using appiumdriver-framework-core with the TestNG hooks. This library also contains TestNG specific code for managing the lifecycle of the AppiumDriver with Test Method.
 
 ## Integration Instructions 
 
@@ -10,7 +10,7 @@ This is the testng specific framework library intended to be used by developers 
 ```xml
 <dependency>
   <groupId>com.browserstack</groupId>
-  <artifactId>webdriver-framework-testng</artifactId>
+  <artifactId>appiumdriver-framework-testng</artifactId>
   <version>LATEST</version>
 </dependency>
  ```
@@ -54,7 +54,7 @@ The AppiumDriverListener class is responsible for,
 - Quitting the AppiumDriver instance such that the test session on BrowserStack also is ended cleanly.
 
 
-Now, the `BaseTest` class can then be extended by your webdriver based test classes as shown below
+Now, the `BaseTest` class can then be extended by your appiumdriver based test classes as shown below
 
 ```java
 public class SomeUsefulTestClass extends BaseTest {

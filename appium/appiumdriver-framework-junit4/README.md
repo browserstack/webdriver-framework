@@ -1,6 +1,6 @@
 # AppiumDriver Framework JUnit4
 
-A library that contains the glue code and the necessary instructions for using webdriver-framework-core with the JUnit4 hooks. This library also contains JUnit4 specific code for managing the lifecycle of the AppiumDriver with Test Method.
+A library that contains the glue code and the necessary instructions for using appiumdriver-framework-core with the JUnit4 hooks. This library also contains JUnit4 specific code for managing the lifecycle of the AppiumDriver with Test Method.
 
 ## Integration Instructions
 
@@ -11,7 +11,7 @@ This is the JUnit4 specific framework library intended to be used by developers 
 ```xml
 <dependency>
   <groupId>com.browserstack</groupId>
-  <artifactId>webdriver-framework-junit4</artifactId>
+  <artifactId>appiumdriver-framework-junit4</artifactId>
   <version>LATEST</version>
 </dependency>
 ```

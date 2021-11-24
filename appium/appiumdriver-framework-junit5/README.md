@@ -1,6 +1,6 @@
 # AppiumDriver Framework JUnit5
 
-A library that contains the glue code and the necessary instructions for using webdriver-framework-core with the JUnit5 hooks. This library also contains JUnit5 specific code for managing the lifecycle of the AppiumDriver with Test Method.
+A library that contains the glue code and the necessary instructions for using appiumdriver-framework-core with the JUnit5 hooks. This library also contains JUnit5 specific code for managing the lifecycle of the AppiumDriver with Test Method.
 
 ## Integration Instructions 
 
@@ -10,7 +10,7 @@ This is the JUnit5 specific framework library intended to be used by developers 
 ```xml
 <dependency>
   <groupId>com.browserstack</groupId>
-  <artifactId>webdriver-framework-junit5</artifactId>
+  <artifactId>appiumdriver-framework-junit5</artifactId>
   <version>LATEST</version>
 </dependency>
  ```
