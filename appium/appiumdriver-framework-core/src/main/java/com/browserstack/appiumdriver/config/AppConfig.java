@@ -31,9 +31,9 @@ public class AppConfig {
     private String getHashId(String os) {
         switch (DeviceType.valueOf(os.toUpperCase())) {
         case ANDROID:
-            return androidHashId;
+            return androidHashId.contains("bs://")?androidHashId:"bs://"+androidHashId;
         case IOS:
-            return iosHashId;
+            return iosHashId.contains("bs://")?iosHashId:"bs://"+iosHashId;
         default:
             throw new RuntimeException("Unsupported Operating System : " + os);
         }
