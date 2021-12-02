@@ -43,8 +43,8 @@ onPremGridDriver:
 cloudDriver:
   hubUrl: https://hub-cloud.browserstack.com/wd/hub
   app:
-    android_hash_id: <hash-id>
-    ios_custom_id: <custom-id> | <custom-sharable-id>
+    android_custom_id: DemoApp
+    ios_hash_id: bs://395666525eaa9c4156a746db0e95d5f17c300305
   localTunnel:
     enabled: false
   common_capabilities:
@@ -53,7 +53,7 @@ cloudDriver:
     capabilities:
       browserstack.debug: true
       browserstack.networkLogs: true
-      browserstack.console: debug
+      browserstack.console: debug 
   platforms:
     - name: IOS - iPhone 12
       os: iOS
@@ -61,9 +61,10 @@ cloudDriver:
       device: iPhone 12
       capabilities:
         browserstack.appium_version: 1.21.0
+       
     - name: Android  - Pixel 3
       os: Android
-      os_version: 10
-      device: "Google Pixel 3"
+      os_version: 12
+      device: "Google Pixel 5"
       capabilities:
         browserstack.appium_version: 1.21.0

@@ -29,10 +29,17 @@ public class AppConfig {
     }
 
     private String getHashId(String os) {
+        System.out.println(os);
         switch (DeviceType.valueOf(os.toUpperCase())) {
         case ANDROID:
+            if(androidHashId == null){
+                return null;
+            }
             return androidHashId.contains("bs://")?androidHashId:"bs://"+androidHashId;
         case IOS:
+            if(iosHashId == null){
+                return null;
+            }
             return iosHashId.contains("bs://")?iosHashId:"bs://"+iosHashId;
         default:
             throw new RuntimeException("Unsupported Operating System : " + os);

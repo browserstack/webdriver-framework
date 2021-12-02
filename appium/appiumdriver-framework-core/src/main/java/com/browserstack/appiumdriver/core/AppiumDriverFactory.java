@@ -21,6 +21,7 @@ import com.browserstack.appiumdriver.config.DriverType;
 import com.browserstack.appiumdriver.config.OnPremDriverConfig;
 import com.browserstack.appiumdriver.config.Platform;
 import com.browserstack.appiumdriver.config.RemoteDriverConfig;
+import com.browserstack.appiumdriver.config.AppConfig;
 import com.browserstack.appiumdriver.config.AppiumDriverConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -35,7 +36,6 @@ public class AppiumDriverFactory {
     private static final String BUILD_ID = "BUILD_ID";
     private static final String DEFAULT_BUILD_NAME = "browserstack-examples-junit5";
     private static final String DEFAULT_BUILD_ENV_NAME = "BROWSERSTACK_BUILD_NAME";
-
 
     private static volatile AppiumDriverFactory instance;
 
@@ -52,9 +52,9 @@ public class AppiumDriverFactory {
 
     private boolean isLocalTunnelEnabled() {
         return appiumDriverConfiguration.getCloudDriverConfig() != null &&
-                 appiumDriverConfiguration.getCloudDriverConfig().getLocalTunnel() != null &&
-                 appiumDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled() != null &&
-                 appiumDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled();
+                appiumDriverConfiguration.getCloudDriverConfig().getLocalTunnel() != null &&
+                appiumDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled() != null &&
+                appiumDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled();
     }
 
     public static AppiumDriverFactory getInstance() {
@@ -84,13 +84,15 @@ public class AppiumDriverFactory {
 
     private void startLocalTunnel() {
         if (isLocalTunnelEnabled()) {
-            Map<String, String> localOptions = appiumDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions();
+            Map<String, String> localOptions = appiumDriverConfiguration.getCloudDriverConfig().getLocalTunnel()
+                    .getLocalOptions();
             String accessKey = appiumDriverConfiguration.getCloudDriverConfig().getAccessKey();
             if (StringUtils.isNoneEmpty(System.getenv(BROWSERSTACK_ACCESS_KEY))) {
                 accessKey = System.getenv(BROWSERSTACK_ACCESS_KEY);
             }
             localOptions.put("key", accessKey);
-            LocalFactory.createInstance(appiumDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions());
+            LocalFactory.createInstance(
+                    appiumDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions());
         }
     }
 
@@ -124,6 +126,19 @@ public class AppiumDriverFactory {
 
     public List<Platform> getPlatforms() {
         return this.appiumDriverConfiguration.getActivePlatforms();
+    }
+
+    public AppConfig getAppConfiguration() {
+        switch (getDriverType()) {
+            case cloudDriver:
+                return this.appiumDriverConfiguration.getCloudDriverConfig().getAppConfig();
+            case onPremDriver:
+                return this.appiumDriverConfiguration.getOnPremDriverConfig().getAppConfig();
+            case onPremGridDriver:
+                return this.appiumDriverConfiguration.getOnPremGridDriverConfig().getAppConfig();
+            default:
+                throw new RuntimeException("Invalid Driver Type");
+        }
     }
 
     private AppiumDriver<?> createRemoteAppiumDriver(Platform platform, String testName) throws MalformedURLException {
@@ -197,7 +212,7 @@ public class AppiumDriverFactory {
     }
 
     private String createBuildName(String buildPrefix) {
-        if(StringUtils.isNotEmpty(System.getenv(DEFAULT_BUILD_ENV_NAME))){
+        if (StringUtils.isNotEmpty(System.getenv(DEFAULT_BUILD_ENV_NAME))) {
             return System.getenv(DEFAULT_BUILD_ENV_NAME);
         }
         if (StringUtils.isEmpty(buildPrefix)) {
@@ -212,7 +227,8 @@ public class AppiumDriverFactory {
         return buildName + "-" + buildSuffix;
     }
 
-    private AppiumDriver<?> initializeDriverForMobilePlatform(Platform platform, DesiredCapabilities platformCapabilities)
+    private AppiumDriver<?> initializeDriverForMobilePlatform(Platform platform,
+            DesiredCapabilities platformCapabilities)
             throws MalformedURLException {
         String hubUrl = "";
         if (this.appiumDriverConfiguration.getDriverType() == DriverType.cloudDriver) {
@@ -221,14 +237,14 @@ public class AppiumDriverFactory {
             hubUrl = this.appiumDriverConfiguration.getOnPremGridDriverConfig().getHubUrl();
         }
         switch (DeviceType.valueOf(platform.getOs().toUpperCase())) {
-        case ANDROID:
-            return StringUtils.isEmpty(hubUrl) ? new AndroidDriver<>(platformCapabilities)
-                    : new AndroidDriver<>(new URL(hubUrl), platformCapabilities);
-        case IOS:
-            return StringUtils.isEmpty(hubUrl) ? new IOSDriver<>(platformCapabilities)
-                    : new IOSDriver<>(new URL(hubUrl), platformCapabilities);
-        default:
-            throw new RuntimeException("Unsupported Operating System : " + platform.getOs());
+            case ANDROID:
+                return StringUtils.isEmpty(hubUrl) ? new AndroidDriver<>(platformCapabilities)
+                        : new AndroidDriver<>(new URL(hubUrl), platformCapabilities);
+            case IOS:
+                return StringUtils.isEmpty(hubUrl) ? new IOSDriver<>(platformCapabilities)
+                        : new IOSDriver<>(new URL(hubUrl), platformCapabilities);
+            default:
+                throw new RuntimeException("Unsupported Operating System : " + platform.getOs());
         }
     }
 }
