@@ -1,0 +1,70 @@
+driverType: cloudDriver
+
+onPremDriver:
+  app:
+    ios_path: /path/to/ipa
+    android_path: /path/to/apk
+  platforms:
+    - name:
+      os: Android,
+      os_version: 11.0
+      device: Google Pixel 4
+      capabilities:
+        appPackage: com.browserstack.sampleapp
+        appActivity: com.browserstack.sampleapp.MainActivity
+    - name:
+      os: IOS,
+      os_version: 14
+      device: iPhone 11
+      capabilities:
+        udid: <udid>
+
+onPremGridDriver:
+  hubUrl: http://localhost:4723/wd/hub
+  app:
+    ios_path: /path/to/ipa
+    android_path: /path/to/apk
+  platforms:
+    - name:
+      os: Android
+      os_version: 11.0
+      device: Google Pixel 4
+      capabilities:
+        appPackage: com.browserstack.sampleapp
+        appActivity: com.browserstack.sampleapp.MainActivity
+        automationName: UiAutomator2
+    - name:
+      os: IOS,
+      os_version: 14
+      device: iPhone 11
+      capabilities:
+        udid: <udid> 
+        
+cloudDriver:
+  hubUrl: https://hub-cloud.browserstack.com/wd/hub
+  app:
+    android_custom_id: DemoApp
+    ios_hash_id: bs://395666525eaa9c4156a746db0e95d5f17c300305
+  localTunnel:
+    enabled: false
+  common_capabilities:
+    project: BrowserStack Demo Repository
+    buildPrefix: browserstack-examples-testng
+    capabilities:
+      browserstack.debug: true
+      browserstack.networkLogs: true
+      browserstack.console: debug 
+  platforms:
+    - name: IOS - iPhone 12
+      os: iOS
+      os_version: 14
+      device: iPhone 12
+      capabilities:
+        browserstack.appium_version: 1.21.0
+       
+    - name: Android  - Pixel 3
+      os: Android
+      os_version: 12
+      device: "Google Pixel 5"
+      capabilities:
+        browserstack.appium_version: 1.21.0
