@@ -1,21 +1,32 @@
 import CommonCapabilities
-import Capabilities
+# import Capabilities
 
-caps = Capabilities.CapabilitiesClass()
+# caps = Capabilities.CapabilitiesClass()
 
-caps.setCapabilities("User1","Princeton")
-caps.setCapabilities("User2","Rajan")
+# caps.setCapabilities("User1","Princeton")
+# caps.setCapabilities("User2","Rajan")
 
-print(caps.getCapabilityMap())
+# print(caps.getCapabilityMap())
 
-commCaps = CommonCapabilities.CommonCapabiltiesClass()
-commCaps.setProject("ProjectName")
-commCaps.setBuildPrefix("BuildName")
+# commCaps = CommonCapabilities.CommonCapabiltiesClass()
+# commCaps.setProject("ProjectName")
+# commCaps.setBuildPrefix("BuildName")
 
-print(commCaps.getProject() + commCaps.getBuildPrefix())
+# print(commCaps.getProject() + commCaps.getBuildPrefix())
 
-commCaps.setCapabilities(caps)
+# commCaps.setCapabilities(caps)
 
-print("**********")
+# print("**********")
 
-print(commCaps.getCapabilities().getCapabilityMap())
+# print(commCaps.getCapabilities().getCapabilityMap())
+
+import DriverType
+import enum 
+
+driver : DriverType.DriverTypeClass = DriverType.DriverTypeClass["cloudDriver"]
+
+
+if(driver == DriverType.DriverTypeClass.cloudDriver):
+    print("true")
+else:
+    print("false")
