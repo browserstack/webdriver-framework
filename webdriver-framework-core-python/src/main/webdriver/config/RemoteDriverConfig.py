@@ -1,4 +1,4 @@
-from _typeshed import Self
+
 import CommonCapabilities
 import LocalTunnelConfig
 
