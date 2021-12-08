@@ -20,13 +20,19 @@ import CommonCapabilities
 
 # print(commCaps.getCapabilities().getCapabilityMap())
 
-import DriverType
-import enum 
+# import DriverType
+# import enum 
 
-driver : DriverType.DriverTypeClass = DriverType.DriverTypeClass["cloudDriver"]
+# driver : DriverType.DriverTypeClass = DriverType.DriverTypeClass["cloudDriver"]
 
 
-if(driver == DriverType.DriverTypeClass.cloudDriver):
-    print("true")
-else:
-    print("false")
+# if(driver == DriverType.DriverTypeClass.cloudDriver):
+#     print("true")
+# else:
+#     print("false")
+import sys
+from pathlib import Path
+sys.path.append(str(Path('.').absolute().parent))
+from core import WebDriverFactory
+
+fact = WebDriverFactory.WebDriverFactoryClass()
