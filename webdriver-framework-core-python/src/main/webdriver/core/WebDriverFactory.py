@@ -6,10 +6,14 @@ from config import LocalTunnelConfig
 from config import CommonCapabilities
 from config import Capabilities
 from config import DriverType
+from core import LocalFactory
 
 from datetime import datetime
 import yaml
 import json
+import os
+
+from selenium import webdriver
 
 class WebDriverFactoryClass:
     DEFAULT_CAPABILITIES_FILE = "./capabilities.yml"
@@ -222,9 +226,73 @@ class WebDriverFactoryClass:
             elif driverType is "cloudDriver":
                 webDriver = self.createRemoteWebDriver(platform, testName)
 
-            return webDriver;
+            return webDriver
         except Exception as e:
            print(e)
         
     def createRemoteWebDriver(self, platform:Platform, testName: str):
         print("Creating Remote Cloud Driver")
+        remoteDriverConfig = self.webDriverConfiguration.getCloudDriverConfig()
+        commonCapabilities = remoteDriverConfig.getCommonCapabilities()
+        platformCapabilities = {}
+
+        if platform.getDevice() != None:
+            platformCapabilities["device"] = platform.getDevice()
+
+        platformCapabilities["browser"] = platform.getBrowser()
+        platformCapabilities["browser_version"] = platform.getBrowserVersion()
+        platformCapabilities["os"] = platform.getOs()
+        platformCapabilities["os_version"] = platform.getOsVersion()
+        platformCapabilities["name"] = testName
+        platformCapabilities["project"] = commonCapabilities.getProject()
+        platformCapabilities["build"] = self.createBuildName(commonCapabilities.getBuildPrefix())
+        if (commonCapabilities.getCapabilities() != None) :
+            commonCaps = commonCapabilities.getCapabilities().getCapabilityMap()
+            platformCapabilities.update(commonCaps)
+        if (platform.getCapabilities() != None):
+            platformCaps = platform.getCapabilities().getCapabilityMap()
+            platformCapabilities.update(platformCaps)
+        
+        user = remoteDriverConfig.getUser()
+        if (os.getenv("BROWSERSTACK_USERNAME") != "" or os.getenv("BROWSERSTACK_USERNAME") != None ) :
+            user = os.getenv("BROWSERSTACK_USERNAME")
+        
+        accessKey = remoteDriverConfig.getAccessKey()
+        if (os.getenv("BROWSERSTACK_ACCESS_KEY") != "" or os.getenv("BROWSERSTACK_ACCESS_KEY") != None ) :
+            accessKey = os.getenv("BROWSERSTACK_ACCESS_KEY")
+
+        platformCapabilities["browserstack.user"] = user
+        platformCapabilities["browserstack.key"] = accessKey
+        
+        if (self.isLocalTunnelEnabled()) :
+            platformCapabilities["browserstack.localIdentifier"] = LocalFactory.getInstance().getLocalIdentifier()
+
+
+        print(f"Initialising RemoteWebDriver with capabilities : {platformCapabilities} ")
+        cloudWebDriver =   webdriver.Remote( \
+                        command_executor=remoteDriverConfig.getHubUrl(), \
+                        desired_capabilities=platformCapabilities)
+
+        return cloudWebDriver
+        
+
+    def createOnPremGridWebDriver(self, platform:Platform):
+        print("Creating On Prem Grid Driver")
+
+    def createOnPremWebDriver(self, platform:Platform):
+        print("Creating On Prem Driver")
+
+    def createBuildName(self, buildPrefix:str):
+        if(os.getenv('DEFAULT_BUILD_ENV_NAME')):
+            return os.getenv('DEFAULT_BUILD_ENV_NAME')
+        
+        if (buildPrefix == "" or buildPrefix is None) :
+            buildPrefix = self.DEFAULT_BUILD_NAME
+        
+        buildName = buildPrefix
+
+        buildSuffix = self.defaultBuildSuffix
+        if (os.getenv("BUILD_ID")) :
+            buildSuffix = os.getenv("BUILD_ID")
+
+        return buildName + "-" + buildSuffix
