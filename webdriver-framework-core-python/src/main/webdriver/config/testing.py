@@ -29,10 +29,11 @@ import CommonCapabilities
 # if(driver == DriverType.DriverTypeClass.cloudDriver):
 #     print("true")
 # else:
-#     print("false")
+    # print("false")
 import sys
 from pathlib import Path
 sys.path.append(str(Path('.').absolute().parent))
 from core import WebDriverFactory
 
 fact = WebDriverFactory.WebDriverFactoryClass()
+
