@@ -5,6 +5,7 @@ from config import RemoteDriverConfig
 from config import LocalTunnelConfig
 from config import CommonCapabilities
 from config import Capabilities
+from config import DriverType
 
 from datetime import datetime
 import yaml
@@ -33,11 +34,20 @@ class WebDriverFactoryClass:
     def __init__(self) :
         self.defaultBuildSuffix = datetime.now()
         self.webDriverConfiguration = self.parseWebDriverConfig()
-        # platforms = self.webDriverConfiguration.getActivePlatforms()
+        # print(self.webDriverConfiguration.getDriverType())
+        platforms = self.webDriverConfiguration.getActivePlatforms()
+        print(platforms)
         # startLocalTunnel();
         # LOGGER.debug("Running tests on {} active platforms.", platforms.size());
 
+    def isLocalTunnelEnabled(self):
+        return self.webDriverConfiguration.getCloudDriverConfig() != None and \
+                 self.webDriverConfiguration.getCloudDriverConfig().getLocalTunnel() != None and \
+                 self.webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled() != None and \
+                 self.webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled()
+
     def parseWebDriverConfig(self) :
+
         capabilitiesConfigFile = self.DEFAULT_CAPABILITIES_FILE
         # LOGGER.debug("Using capabilities configuration from FILE :: {}", capabilitiesConfigFile);
         ##Read yml file 
@@ -53,8 +63,6 @@ class WebDriverFactoryClass:
 
             #Setting Test Endpoint
             webDriverConfiguration.setTestEndpoint(configData["testEndpoint"])
-            endpoint = webDriverConfiguration.getTestEndpoint()
-            print(f"Test Endpoint: {endpoint}")
 
             #Setting NamedTestURls
             allUrlsDict = configData["namedTestUrls"]
@@ -62,14 +70,9 @@ class WebDriverFactoryClass:
                 value = configData["namedTestUrls"][key]
                 webDriverConfiguration.setNamedTestUrls(key, value)
 
-            urls = webDriverConfiguration.getNamedTestUrls()
-            print(f"Named Test URLS: {urls}")
-
             #Setting DriverType
             driverType = configData["driverType"]
-            webDriverConfiguration.setDriverType(driverType)
-            dtype = webDriverConfiguration.getDriverType()
-            print(f"Driver Type: {dtype}")
+            webDriverConfiguration.setDriverType(DriverType.DriverTypeClass[driverType])
 
             #Setting On Prem
             platformsForOnPrem = []
@@ -205,3 +208,23 @@ class WebDriverFactoryClass:
             print(webDriverConfiguration.getCloudDriverConfig())
 
         return webDriverConfiguration
+
+    #return a selenium webdriver
+    def createWebDriverForPlatform(self, platform:Platform, testName:str) :
+
+        try :
+            webDriver = None
+            driverType = self.webDriverConfiguration.getDriverType()
+            if driverType is "onPremDriver":
+                webDriver = self.createOnPremWebDriver(platform)
+            elif driverType is "onPremGridDriver":
+                webDriver = self.createOnPremGridWebDriver(platform)
+            elif driverType is "cloudDriver":
+                webDriver = self.createRemoteWebDriver(platform, testName)
+
+            return webDriver;
+        except Exception as e:
+           print(e)
+        
+    def createRemoteWebDriver(self, platform:Platform, testName: str):
+        print("Creating Remote Cloud Driver")

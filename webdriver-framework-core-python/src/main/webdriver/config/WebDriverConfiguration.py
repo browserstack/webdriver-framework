@@ -14,13 +14,13 @@ class WebDriverConfigurationClass:
     def getActivePlatforms(self):
         activePlatforms = []
 
-        if(self.__driverType == DriverType.DriverTypeClass.onPremDriver ):
+        if(self.__driverType.name == "onPremDriver" ):
             activePlatforms = self.__onPremDriverConfig.getPlatforms()
 
-        elif(self.__driverType == DriverType.DriverTypeClass.onPremGridDriver):
+        elif(self.__driverType.name == "onPremGridDriver"):
             activePlatforms = self.__onPremGridDriverConfig.getPlatforms()
 
-        elif(self.__driverType == DriverType.DriverTypeClass.cloudDriver):
+        elif(self.__driverType.name == "cloudDriver"):
             activePlatforms = self.__cloudDriverConfig.getPlatforms()
 
         return activePlatforms
@@ -32,7 +32,7 @@ class WebDriverConfigurationClass:
         self.__testEndpoint = testEndpoint
 
     def getDriverType(self):
-        return self.__driverType
+        return self.__driverType.name
 
     def setDriverType(self, driverType : DriverType.DriverTypeClass):
         self.__driverType = driverType
