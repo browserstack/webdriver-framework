@@ -106,7 +106,10 @@ class WebDriverFactoryClass:
             localConfig = LocalTunnelConfig.LocalTunnelConfigClass()
             localConfig.setEnabled(configData["cloudDriver"]["localTunnel"]["enabled"])
 
-            #Add logic to put isEnabled Local Tunnel and then call LocalFactory to set local options.
+            #Setting local Options
+            localOptionsDictionary = configData["cloudDriver"]["localTunnel"]["local_options"]
+            for key in localOptionsDictionary:
+                localConfig.setLocalOption(key, localOptionsDictionary[key])
 
             capabilities = Capabilities.CapabilitiesClass()
             capsFromConfig = configData["cloudDriver"]["common_capabilities"]["capabilities"]
