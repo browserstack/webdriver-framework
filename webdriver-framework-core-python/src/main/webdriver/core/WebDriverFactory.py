@@ -41,8 +41,15 @@ class WebDriverFactoryClass:
         # print(self.webDriverConfiguration.getDriverType())
         platforms = self.webDriverConfiguration.getActivePlatforms()
         print(platforms)
-        # startLocalTunnel();
+        # self.startLocalTunnel()
         # LOGGER.debug("Running tests on {} active platforms.", platforms.size());
+
+    @staticmethod
+    def getInstance() :
+        if (WebDriverFactoryClass.instance == None) :
+            WebDriverFactoryClass.instance = WebDriverFactoryClass()
+
+        return WebDriverFactoryClass.instance
 
     def isLocalTunnelEnabled(self):
         return self.webDriverConfiguration.getCloudDriverConfig() != None and \
@@ -50,6 +57,16 @@ class WebDriverFactoryClass:
                  self.webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled() != None and \
                  self.webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().isEnabled()
 
+    def startLocalTunnel(self) :
+        if (self.isLocalTunnelEnabled()) :
+            localOptions = self.webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions()
+            accessKey = self.webDriverConfiguration.getCloudDriverConfig().getAccessKey()
+            if (os.getenv("BROWSERSTACK_ACCESS_KEY")):
+                accessKey = os.getenv("BROWSERSTACK_ACCESS_KEY")
+            
+            localOptions.put("key", accessKey)
+            LocalFactory.createInstance(self.webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions())
+      
     def parseWebDriverConfig(self) :
 
         capabilitiesConfigFile = self.DEFAULT_CAPABILITIES_FILE
@@ -107,9 +124,12 @@ class WebDriverFactoryClass:
             localConfig.setEnabled(configData["cloudDriver"]["localTunnel"]["enabled"])
 
             #Setting local Options
-            localOptionsDictionary = configData["cloudDriver"]["localTunnel"]["local_options"]
-            for key in localOptionsDictionary:
-                localConfig.setLocalOption(key, localOptionsDictionary[key])
+            if("local_options" in configData["cloudDriver"]["localTunnel"]):
+                localOptionsDictionary = configData["cloudDriver"]["localTunnel"]["local_options"]
+                for key in localOptionsDictionary:
+                    localConfig.setLocalOption(key, localOptionsDictionary[key])
+
+            print("Hey")
 
             capabilities = Capabilities.CapabilitiesClass()
             capsFromConfig = configData["cloudDriver"]["common_capabilities"]["capabilities"]
@@ -205,7 +225,6 @@ class WebDriverFactoryClass:
             #setting config to webDriverConfig
             webDriverConfiguration.setOnPremGridDriverConfig(onPremGridDriverConfig)
             
-            
         except Exception as e:
             print(e)
 
@@ -222,11 +241,11 @@ class WebDriverFactoryClass:
         try :
             webDriver = None
             driverType = self.webDriverConfiguration.getDriverType()
-            if driverType is "onPremDriver":
+            if driverType == "onPremDriver":
                 webDriver = self.createOnPremWebDriver(platform)
-            elif driverType is "onPremGridDriver":
+            elif driverType == "onPremGridDriver":
                 webDriver = self.createOnPremGridWebDriver(platform)
-            elif driverType is "cloudDriver":
+            elif driverType == "cloudDriver":
                 webDriver = self.createRemoteWebDriver(platform, testName)
 
             return webDriver
@@ -278,12 +297,29 @@ class WebDriverFactoryClass:
 
         return cloudWebDriver
         
-
     def createOnPremGridWebDriver(self, platform:Platform):
         print("Creating On Prem Grid Driver")
 
     def createOnPremWebDriver(self, platform:Platform):
         print("Creating On Prem Driver")
+
+    def getTestEndpoint(self):
+        return self.webDriverConfiguration.getTestEndpoint()
+
+    def getNamedTestUrls(self):
+        return self.webDriverConfiguration.getNamedTestUrls();
+
+    def getNamedUrl(name :str) :
+        return WebDriverFactoryClass.getInstance().webDriverConfiguration.getNamedUrl(name)
+
+    def getDriverType(self) :
+        return self.webDriverConfiguration.getDriverType()
+
+    def isCloudDriver(self) :
+        return self.webDriverConfiguration.getDriverType().name == "cloudDriver"
+
+    def getPlatforms(self) :
+        return self.webDriverConfiguration.getActivePlatforms()
 
     def createBuildName(self, buildPrefix:str):
         if(os.getenv('DEFAULT_BUILD_ENV_NAME')):

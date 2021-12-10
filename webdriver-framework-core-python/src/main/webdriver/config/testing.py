@@ -35,5 +35,9 @@ from pathlib import Path
 sys.path.append(str(Path('.').absolute().parent))
 from core import WebDriverFactory
 
-fact = WebDriverFactory.WebDriverFactoryClass()
+fact = WebDriverFactory.WebDriverFactoryClass.getInstance()
+
+# fact = WebDriverFactory.WebDriverFactoryClass()
+
+print(fact)
 
