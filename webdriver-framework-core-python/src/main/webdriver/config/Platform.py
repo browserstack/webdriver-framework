@@ -72,4 +72,3 @@ class PlatformClass:
 
     def setCapabilities(self, capabilities: Capabilities.CapabilitiesClass) :
         self.__capabilities = capabilities
-    

@@ -39,5 +39,5 @@ fact = WebDriverFactory.WebDriverFactoryClass.getInstance()
 
 # fact = WebDriverFactory.WebDriverFactoryClass()
 
-print(fact)
+print(fact.isLocalTunnelEnabled())
 
