@@ -40,9 +40,8 @@ class WebDriverFactoryClass:
         self.webDriverConfiguration = self.parseWebDriverConfig()
         # print(self.webDriverConfiguration.getDriverType())
         platforms = self.webDriverConfiguration.getActivePlatforms()
-        print(platforms)
-        # self.startLocalTunnel()
-        # LOGGER.debug("Running tests on {} active platforms.", platforms.size());
+        self.startLocalTunnel()
+        print(f"Running tests on {len(platforms)} active platforms." )
 
     @staticmethod
     def getInstance() :
@@ -60,12 +59,13 @@ class WebDriverFactoryClass:
     def startLocalTunnel(self) :
         if (self.isLocalTunnelEnabled()) :
             localOptions = self.webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions()
+            print(localOptions)
             accessKey = self.webDriverConfiguration.getCloudDriverConfig().getAccessKey()
             if (os.getenv("BROWSERSTACK_ACCESS_KEY")):
                 accessKey = os.getenv("BROWSERSTACK_ACCESS_KEY")
             
-            localOptions.put("key", accessKey)
-            LocalFactory.createInstance(self.webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions())
+            localOptions["key"] =  accessKey
+            LocalFactory.LocalFactoryClass.createInstance(self.webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions())
       
     def parseWebDriverConfig(self) :
 
@@ -129,7 +129,7 @@ class WebDriverFactoryClass:
                 for key in localOptionsDictionary:
                     localConfig.setLocalOption(key, localOptionsDictionary[key])
 
-            print("Hey")
+            cloudDriverConfig.setLocalTunnel(localConfig)
 
             capabilities = Capabilities.CapabilitiesClass()
             capsFromConfig = configData["cloudDriver"]["common_capabilities"]["capabilities"]
@@ -299,9 +299,43 @@ class WebDriverFactoryClass:
         
     def createOnPremGridWebDriver(self, platform:Platform):
         print("Creating On Prem Grid Driver")
+        browerType = platform.getBrowser().toUpperCase()
+        capabilities = {}
+        if (platform.getCapabilities() != None) :
+            capabilities = platform.getCapabilities().getCapabilityMap()
+        
+        print(f"Initialising RemoteWebDriver with capabilities : {capabilities} ")
+        onPremGridWebDriver =   webdriver.Remote( \
+                        command_executor=self.webDriverConfiguration.getOnPremGridDriverConfig().getHubUrl(), \
+                        desired_capabilities=capabilities)
+        
+        return onPremGridWebDriver
 
     def createOnPremWebDriver(self, platform:Platform):
         print("Creating On Prem Driver")
+        onPremWebDriver = None
+        browserType = platform.getBrowser().toUpperCase()
+
+        if browserType == "CHROME":
+            os.environ['WEBDRIVER_CHROME_DRIVER'] = str(platform.getDriverPath())
+            onPremWebDriver = webdriver.Chrome()
+        elif browserType == "FIREFOX":
+            os.environ['WEBDRIVER_GECKO_DRIVER'] = str(platform.getDriverPath())
+            onPremWebDriver = webdriver.Firefox()
+        elif browserType == "IE":
+            os.environ['WEBDRIVER_IE_DRIVER'] = str(platform.getDriverPath())
+            onPremWebDriver = webdriver.Ie()
+        elif browserType == "EDGE":
+            os.environ['WEBDRIVER_EDGE_DRIVER'] = str(platform.getDriverPath())
+            onPremWebDriver = webdriver.Edge()
+        elif browserType == "SAFARI" :
+            onPremWebDriver = webdriver.Safari()
+        elif browserType == "OPERA" :
+            onPremWebDriver = webdriver.Opera()
+        else:
+            print("Not supported")
+        
+        return onPremWebDriver
 
     def getTestEndpoint(self):
         return self.webDriverConfiguration.getTestEndpoint()
