@@ -1,6 +1,6 @@
-import DriverType
-import OnPremDriverConfig
-import RemoteDriverConfig
+from config import DriverType
+from config import OnPremDriverConfig
+from config import RemoteDriverConfig
 
 class WebDriverConfigurationClass:
 

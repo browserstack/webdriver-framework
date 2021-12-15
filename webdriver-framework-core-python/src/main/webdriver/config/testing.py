@@ -45,13 +45,14 @@ all_platforms = fact.getPlatforms()
 
 webDriver = None
 for platform in all_platforms:
+
     webDriver = fact.createWebDriverForPlatform(platform, "Test-1")
+    url_to_test = fact.getTestEndpoint()
 
-    print(webDriver)
-    webDriver.get("https://www.google.com")
-
+    webDriver.get(url_to_test)
+    # print(webDriver)
     webDriver.quit()
-
     break
+
 
 
