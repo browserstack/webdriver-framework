@@ -16,7 +16,7 @@ import os
 from selenium import webdriver
 
 class WebDriverFactoryClass:
-    DEFAULT_CAPABILITIES_FILE = "./capabilities.yml"
+    DEFAULT_CAPABILITIES_FILE = "/Users/princeton99/Desktop/All/BrowserStack/BrowserStack_Projects/webdriver-framework/webdriver-framework-core-python/src/test/resources/webdriver-config.yml"
 
 
     BROWSERSTACK_USERNAME = "BROWSERSTACK_USERNAME"
@@ -38,9 +38,9 @@ class WebDriverFactoryClass:
     def __init__(self) :
         self.defaultBuildSuffix = str(datetime.now())
         self.webDriverConfiguration = self.parseWebDriverConfig()
-        # print(self.webDriverConfiguration.getDriverType())
         platforms = self.webDriverConfiguration.getActivePlatforms()
-        self.startLocalTunnel()
+        if(self.isCloudDriver()):
+            self.startLocalTunnel()
         print(f"Running tests on {len(platforms)} active platforms." )
 
     @staticmethod
@@ -59,7 +59,6 @@ class WebDriverFactoryClass:
     def startLocalTunnel(self) :
         if (self.isLocalTunnelEnabled()) :
             localOptions = self.webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions()
-            # print(localOptions)
             accessKey = self.webDriverConfiguration.getCloudDriverConfig().getAccessKey()
             if (os.getenv("BROWSERSTACK_ACCESS_KEY")):
                 accessKey = os.getenv("BROWSERSTACK_ACCESS_KEY")
@@ -70,7 +69,7 @@ class WebDriverFactoryClass:
     def parseWebDriverConfig(self) :
 
         capabilitiesConfigFile = self.DEFAULT_CAPABILITIES_FILE
-        # LOGGER.debug("Using capabilities configuration from FILE :: {}", capabilitiesConfigFile);
+        print(f"Using capabilities configuration from FILE :: {capabilitiesConfigFile}");
         ##Read yml file 
         configData = {}
         with open(capabilitiesConfigFile) as f:
@@ -78,8 +77,8 @@ class WebDriverFactoryClass:
 
         webDriverConfiguration : WebDriverConfiguration = None
         try:
-            #map to object 
-            print("Mapping object...")
+            #Mapping config file to objects
+
             webDriverConfiguration = WebDriverConfiguration.WebDriverConfigurationClass()
 
             #Setting Test Endpoint
@@ -101,6 +100,8 @@ class WebDriverFactoryClass:
             platformsData = configData["onPremDriver"]["platforms"]
             for platform in platformsData:
                 temp_platform = Platform.PlatformClass()
+                if "browser" in platform:
+                    temp_platform.setBrowser(platform["browser"])
                 if "driverPath" in platform:
                     temp_platform.setDriverPath(platform["driverPath"])
                 if "name" in platform:
@@ -317,7 +318,7 @@ class WebDriverFactoryClass:
     def createOnPremWebDriver(self, platform:Platform):
         print("Creating On Prem Driver")
         onPremWebDriver = None
-        browserType = platform.getBrowser().toUpperCase()
+        browserType = platform.getBrowser().upper()
 
         if browserType == "CHROME":
             os.environ['WEBDRIVER_CHROME_DRIVER'] = str(platform.getDriverPath())
@@ -353,7 +354,7 @@ class WebDriverFactoryClass:
         return self.webDriverConfiguration.getDriverType()
 
     def isCloudDriver(self) :
-        return self.webDriverConfiguration.getDriverType().name == "cloudDriver"
+        return self.webDriverConfiguration.getDriverType() == "cloudDriver"
 
     def getPlatforms(self) :
         return self.webDriverConfiguration.getActivePlatforms()

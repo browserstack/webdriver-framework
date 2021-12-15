@@ -1,4 +1,4 @@
-import Capabilities
+from config import Capabilities
 
 class PlatformClass:
 

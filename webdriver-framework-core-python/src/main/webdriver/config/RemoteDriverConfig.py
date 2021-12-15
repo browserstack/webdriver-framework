@@ -1,6 +1,6 @@
 
-import CommonCapabilities
-import LocalTunnelConfig
+from config import CommonCapabilities
+from config import LocalTunnelConfig
 
 class RemoteDriverConfigClass :
 
