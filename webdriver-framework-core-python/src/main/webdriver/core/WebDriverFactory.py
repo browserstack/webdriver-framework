@@ -229,11 +229,6 @@ class WebDriverFactoryClass:
         except Exception as e:
             print(e)
 
-        finally:
-            print(webDriverConfiguration.getOnPremDriverConfig())
-            print(webDriverConfiguration.getOnPremGridDriverConfig())
-            print(webDriverConfiguration.getCloudDriverConfig())
-
         return webDriverConfiguration
 
     #return a selenium webdriver
@@ -254,12 +249,10 @@ class WebDriverFactoryClass:
            print(e)
         
     def createRemoteWebDriver(self, platform:Platform, testName: str):
-        print("Creating Remote Cloud Driver")
+
         remoteDriverConfig = self.webDriverConfiguration.getCloudDriverConfig()
         commonCapabilities = remoteDriverConfig.getCommonCapabilities()
         platformCapabilities = {}
-
-
 
         if platform.getDevice() != None:
             platformCapabilities["device"] = platform.getDevice()
@@ -302,7 +295,7 @@ class WebDriverFactoryClass:
         return cloudWebDriver
         
     def createOnPremGridWebDriver(self, platform:Platform):
-        print("Creating On Prem Grid Driver")
+        
         browerType = platform.getBrowser().toUpperCase()
         capabilities = {}
         if (platform.getCapabilities() != None) :
@@ -312,11 +305,11 @@ class WebDriverFactoryClass:
         onPremGridWebDriver =   webdriver.Remote( \
                         command_executor=self.webDriverConfiguration.getOnPremGridDriverConfig().getHubUrl(), \
                         desired_capabilities=capabilities)
-        
+
         return onPremGridWebDriver
 
     def createOnPremWebDriver(self, platform:Platform):
-        print("Creating On Prem Driver")
+        
         onPremWebDriver = None
         browserType = platform.getBrowser().upper()
 
@@ -338,7 +331,9 @@ class WebDriverFactoryClass:
             onPremWebDriver = webdriver.Opera()
         else:
             print("Not supported")
+            return None
         
+        print(f"Initialising Driver for : {browserType} ")
         return onPremWebDriver
 
     def getTestEndpoint(self):
