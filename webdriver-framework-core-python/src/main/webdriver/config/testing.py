@@ -1,3 +1,4 @@
+from selenium import webdriver
 import CommonCapabilities
 # import Capabilities
 
@@ -39,5 +40,18 @@ fact = WebDriverFactory.WebDriverFactoryClass.getInstance()
 
 # fact = WebDriverFactory.WebDriverFactoryClass()
 
-print(fact.isLocalTunnelEnabled())
+all_platforms = fact.getPlatforms()
+
+
+webDriver = None
+for platform in all_platforms:
+    webDriver = fact.createWebDriverForPlatform(platform, "Test-1")
+
+    print(webDriver)
+    webDriver.get("https://www.google.com")
+
+    webDriver.quit()
+
+    break
+
 

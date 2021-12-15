@@ -36,7 +36,7 @@ class WebDriverFactoryClass:
     defaultBuildSuffix     : str
 
     def __init__(self) :
-        self.defaultBuildSuffix = datetime.now()
+        self.defaultBuildSuffix = str(datetime.now())
         self.webDriverConfiguration = self.parseWebDriverConfig()
         # print(self.webDriverConfiguration.getDriverType())
         platforms = self.webDriverConfiguration.getActivePlatforms()
@@ -59,7 +59,7 @@ class WebDriverFactoryClass:
     def startLocalTunnel(self) :
         if (self.isLocalTunnelEnabled()) :
             localOptions = self.webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions()
-            print(localOptions)
+            # print(localOptions)
             accessKey = self.webDriverConfiguration.getCloudDriverConfig().getAccessKey()
             if (os.getenv("BROWSERSTACK_ACCESS_KEY")):
                 accessKey = os.getenv("BROWSERSTACK_ACCESS_KEY")
@@ -258,6 +258,8 @@ class WebDriverFactoryClass:
         commonCapabilities = remoteDriverConfig.getCommonCapabilities()
         platformCapabilities = {}
 
+
+
         if platform.getDevice() != None:
             platformCapabilities["device"] = platform.getDevice()
 
@@ -287,7 +289,8 @@ class WebDriverFactoryClass:
         platformCapabilities["browserstack.key"] = accessKey
         
         if (self.isLocalTunnelEnabled()) :
-            platformCapabilities["browserstack.localIdentifier"] = LocalFactory.getInstance().getLocalIdentifier()
+            platformCapabilities["browserstack.local"] = "true"
+            platformCapabilities["browserstack.localIdentifier"] = LocalFactory.LocalFactoryClass.getInstance().getLocalIdentifier()
 
 
         print(f"Initialising RemoteWebDriver with capabilities : {platformCapabilities} ")

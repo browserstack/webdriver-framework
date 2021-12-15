@@ -23,6 +23,8 @@ class LocalFactoryClass:
                     self.setProxy("http", localOptions)
 
             self.local.start(**localOptions)
+            LocalFactoryClass.localIdentifier = localIdentifier
+
             print(f"Started BrowserStack Local with identifier {localIdentifier}.")
         except Exception as e :
             print("Initialization of BrowserStack Local failed.")

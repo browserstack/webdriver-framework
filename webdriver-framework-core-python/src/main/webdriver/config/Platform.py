@@ -2,15 +2,15 @@ import Capabilities
 
 class PlatformClass:
 
-    __name           : str
-    __os             : str
-    __osVersion      : str
-    __browser        : str
-    __browserVersion : str
-    __device         : str
-    __realMobile     : bool
-    __driverPath     : str
-    __capabilities   : Capabilities.CapabilitiesClass
+    __name           : str = None
+    __os             : str = None
+    __osVersion      : str = None
+    __browser        : str = None
+    __browserVersion : str = None
+    __device         : str = None
+    __realMobile     : bool = None
+    __driverPath     : str = None
+    __capabilities   : Capabilities.CapabilitiesClass = None
 
     def getName(self):
         return self.__name
