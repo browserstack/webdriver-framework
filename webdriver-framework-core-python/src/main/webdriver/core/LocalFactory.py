@@ -1,12 +1,16 @@
 from browserstack.local import Local
 import os
 import atexit
+import threading
 
 class LocalFactoryClass:
     instance = None 
 
     local = Local()
     localIdentifier : str = ""
+
+    LocalFactoryClassLock = threading.Lock()
+
 
     def __init__(self, localOptions) :
         try :
@@ -52,10 +56,13 @@ class LocalFactoryClass:
 
     @staticmethod
     def createInstance(args:dict) :
+        #Make thread safe
         if (LocalFactoryClass.instance == None) :
-            LocalFactoryClass.instance = LocalFactoryClass(args)
-            print("Starting Local Instance...")
-            atexit.register(LocalFactoryClass.stopLocal)
+            with LocalFactoryClass.LocalFactoryClassLock:
+                if (LocalFactoryClass.instance == None) :
+                    LocalFactoryClass.instance = LocalFactoryClass(args)
+                    print("Starting Local Instance...")
+                    atexit.register(LocalFactoryClass.stopLocal)
             
     @staticmethod
     def getInstance() :

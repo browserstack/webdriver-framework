@@ -14,15 +14,14 @@ url_to_test = fact.getTestEndpoint()
 
 all_threads = []
 
-def threaded_function(driver):
+def threaded_function(platform):
+    driver = fact.createWebDriverForPlatform(platform, "Test-1")
     driver.get(url_to_test)
     driver.quit()
 
 #Creating Threads for execution
 for platform in all_platforms:
-    webDriver = fact.createWebDriverForPlatform(platform, "Test-1")
-    if(webDriver != None):
-        all_threads.append(Thread(target = threaded_function, args = (webDriver, )))
+    all_threads.append(Thread(target = threaded_function, args = (platform, )))
 
 #Starting the Threads
 for thread in all_threads:
