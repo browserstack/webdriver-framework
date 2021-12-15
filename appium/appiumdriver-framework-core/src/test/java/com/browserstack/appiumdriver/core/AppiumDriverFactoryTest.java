@@ -1,11 +1,9 @@
-package com.browserstack.webdriver.core;
+package com.browserstack.appiumdriver.core;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.browserstack.appiumdriver.config.AppConfig;
 import com.browserstack.appiumdriver.config.Platform;
-import com.browserstack.appiumdriver.core.AppiumDriverFactory;
 
 import org.junit.Before;
 import org.junit.Ignore;
