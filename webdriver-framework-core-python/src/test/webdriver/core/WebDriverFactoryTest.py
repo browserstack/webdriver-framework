@@ -1,22 +1,32 @@
 import sys
 from pathlib import Path
-# sys.path.append(str(Path('.').absolute().parent))
+from threading import Thread
 
-sys.path.insert(0, '/Users/princeton99/Desktop/All/BrowserStack/BrowserStack_Projects/webdriver-framework/webdriver-framework-core-python/src/main/webdriver')
+sys.path.insert(0, '../../../main/webdriver')
 
 from core import WebDriverFactory
 
+webDriver = None
 fact = WebDriverFactory.WebDriverFactoryClass.getInstance()
 
 all_platforms = fact.getPlatforms()
+url_to_test = fact.getTestEndpoint()
 
-webDriver = None
+all_threads = []
+
+def threaded_function(driver):
+    driver.get(url_to_test)
+    driver.quit()
+
+#Creating Threads for execution
 for platform in all_platforms:
-
     webDriver = fact.createWebDriverForPlatform(platform, "Test-1")
-    url_to_test = fact.getTestEndpoint()
+    if(webDriver != None):
+        all_threads.append(Thread(target = threaded_function, args = (webDriver, )))
 
-    webDriver.get(url_to_test)
-    # print(webDriver)
-    webDriver.quit()
-    break
+#Starting the Threads
+for thread in all_threads:
+    thread.start()
+
+
+    
