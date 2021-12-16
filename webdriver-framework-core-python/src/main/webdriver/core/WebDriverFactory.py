@@ -69,7 +69,84 @@ class WebDriverFactoryClass:
             
             localOptions["key"] =  accessKey
             LocalFactory.LocalFactoryClass.createInstance(self.webDriverConfiguration.getCloudDriverConfig().getLocalTunnel().getLocalOptions())
-      
+
+
+    def createRemoteDriverConfig(self, driverType : str, configData: dict):
+        driverConfig = RemoteDriverConfig.RemoteDriverConfigClass()
+        driverConfig.setHubUrl(configData[driverType]["hubUrl"])
+        if "user" in configData[driverType]:
+            driverConfig.setUser(configData[driverType]["user"])
+        if "accessKey" in configData[driverType]:
+            driverConfig.setAccessKey(configData[driverType]["accessKey"])
+
+        if driverType == "cloudDriver":
+            localConfig = LocalTunnelConfig.LocalTunnelConfigClass()
+            if "localTunnel" in configData[driverType] and "enabled" in configData[driverType]["localTunnel"]:
+                localConfig.setEnabled(configData[driverType]["localTunnel"]["enabled"])
+                #Setting local Options
+                if("local_options" in configData[driverType]["localTunnel"]):
+                    localOptionsDictionary = configData[driverType]["localTunnel"]["local_options"]
+                    for key in localOptionsDictionary:
+                        localConfig.setLocalOption(key, localOptionsDictionary[key])
+
+            driverConfig.setLocalTunnel(localConfig)
+        
+        if "common_capabilities" in configData[driverType] and "capabilities" in configData[driverType]["common_capabilities"]:
+            capabilities = Capabilities.CapabilitiesClass()
+            capsFromConfig = configData[driverType]["common_capabilities"]["capabilities"]
+            for cap in capsFromConfig:
+                capabilities.setCapabilities(cap, capsFromConfig[cap])
+            
+            commonCaps = CommonCapabilities.CommonCapabiltiesClass()
+            if "project" in configData[driverType]["common_capabilities"]:
+                commonCaps.setProject(configData[driverType]["common_capabilities"]["project"])
+            if "buildPrefix" in configData[driverType]["common_capabilities"]:
+                commonCaps.setBuildPrefix(configData[driverType]["common_capabilities"]["buildPrefix"])
+
+            commonCaps.setCapabilities(capabilities)
+
+            driverConfig.setCommonCapabilities(commonCaps)
+
+        platformsForCloudDriver = []
+
+        platformsData = configData[driverType]["platforms"]
+        for platform in platformsData:
+            temp_platform = Platform.PlatformClass()
+
+            if "name" in platform:
+                temp_platform.setName(platform["name"])
+            if "os" in platform:
+                temp_platform.setOs(platform["os"])
+            if "os_version" in platform:
+                temp_platform.setOsVersion(platform["os_version"])
+            if "browser" in platform:
+                temp_platform.setBrowser(platform["browser"])
+            if "browser_version" in platform:
+                temp_platform.setBrowserVersion(platform["browser_version"])
+            if "device" in platform:
+                temp_platform.setDevice(platform["device"])
+            if "realMobile" in platform:
+                temp_platform.setRealMobile(platform["realMobile"])
+                
+            if "capabilities" in platform:
+                temp_capabilities = Capabilities.CapabilitiesClass()
+                temp_caps = platform["capabilities"]
+
+                for cap in temp_caps:
+                    temp_capabilities.setCapabilities(cap, temp_caps[cap])
+                
+                temp_platform.setCapabilities(temp_capabilities)
+            
+            #Adding Current Platform in list
+            platformsForCloudDriver.append(temp_platform)
+
+        #setting All platforms in Driver config
+        driverConfig.setPlatforms(platformsForCloudDriver)
+
+        return driverConfig
+
+
+
     def parseWebDriverConfig(self) :
 
         capabilitiesConfigFile = self.DEFAULT_CAPABILITIES_FILE
@@ -123,124 +200,18 @@ class WebDriverFactoryClass:
 
                 webDriverConfiguration.setOnPremDriverConfig(onPremDriverConfig)
 
-            #Setting cloud Driver
+            #Setting cloudDriver Config now
+            cloudDriverConfig = None
             if "cloudDriver" in configData:
-                cloudDriverConfig = RemoteDriverConfig.RemoteDriverConfigClass()
-                cloudDriverConfig.setHubUrl(configData["cloudDriver"]["hubUrl"])
-                if "user" in configData["cloudDriver"]:
-                    cloudDriverConfig.setUser(configData["cloudDriver"]["user"])
-                if "accessKey" in configData["cloudDriver"]:
-                    cloudDriverConfig.setAccessKey(configData["cloudDriver"]["accessKey"])
+                cloudDriverConfig = self.createRemoteDriverConfig("cloudDriver", configData)
 
-                localConfig = LocalTunnelConfig.LocalTunnelConfigClass()
-                if "localTunnel" in configData["cloudDriver"] and "enabled" in configData["cloudDriver"]["localTunnel"]:
-                    localConfig.setEnabled(configData["cloudDriver"]["localTunnel"]["enabled"])
-                    #Setting local Options
-                    if("local_options" in configData["cloudDriver"]["localTunnel"]):
-                        localOptionsDictionary = configData["cloudDriver"]["localTunnel"]["local_options"]
-                        for key in localOptionsDictionary:
-                            localConfig.setLocalOption(key, localOptionsDictionary[key])
-
-                cloudDriverConfig.setLocalTunnel(localConfig)
-
-                if "common_capabilities" in configData["cloudDriver"] and "capabilities" in configData["cloudDriver"]["common_capabilities"]:
-                    capabilities = Capabilities.CapabilitiesClass()
-                    capsFromConfig = configData["cloudDriver"]["common_capabilities"]["capabilities"]
-                    for cap in capsFromConfig:
-                        capabilities.setCapabilities(cap, capsFromConfig[cap])
-                    
-                    commonCaps = CommonCapabilities.CommonCapabiltiesClass()
-                    if "project" in configData["cloudDriver"]["common_capabilities"]:
-                        commonCaps.setProject(configData["cloudDriver"]["common_capabilities"]["project"])
-                    if "buildPrefix" in configData["cloudDriver"]["common_capabilities"]:
-                        commonCaps.setBuildPrefix(configData["cloudDriver"]["common_capabilities"]["buildPrefix"])
-
-                    commonCaps.setCapabilities(capabilities)
-
-                    cloudDriverConfig.setCommonCapabilities(commonCaps)
-
-                platformsForCloudDriver = []
-
-                platformsData = configData["cloudDriver"]["platforms"]
-                for platform in platformsData:
-                    temp_platform = Platform.PlatformClass()
-
-                    if "name" in platform:
-                        temp_platform.setName(platform["name"])
-                    if "os" in platform:
-                        temp_platform.setOs(platform["os"])
-                    if "os_version" in platform:
-                        temp_platform.setOsVersion(platform["os_version"])
-                    if "browser" in platform:
-                        temp_platform.setBrowser(platform["browser"])
-                    if "browser_version" in platform:
-                        temp_platform.setBrowserVersion(platform["browser_version"])
-                    if "device" in platform:
-                        temp_platform.setDevice(platform["device"])
-                    if "realMobile" in platform:
-                        temp_platform.setRealMobile(platform["realMobile"])
-                        
-                    if "capabilities" in platform:
-                        temp_capabilities = Capabilities.CapabilitiesClass()
-                        temp_caps = platform["capabilities"]
-
-                        for cap in temp_caps:
-                            temp_capabilities.setCapabilities(cap, temp_caps[cap])
-                        
-                        temp_platform.setCapabilities(temp_capabilities)
-                    
-                    #Adding Current Platform in list
-                    platformsForCloudDriver.append(temp_platform)
-
-                #setting All platforms in Driver config
-                cloudDriverConfig.setPlatforms(platformsForCloudDriver)
                 #setting config to webDriverConfig
                 webDriverConfiguration.setCloudDriverConfig(cloudDriverConfig)
 
             #Setting onPremGridDriver Config now
+            onPremGridDriverConfig = None
             if "onPremGridDriver" in configData:
-                onPremGridDriverConfig = RemoteDriverConfig.RemoteDriverConfigClass()
-                onPremGridDriverConfig.setHubUrl(configData["onPremGridDriver"]["hubUrl"])
-                if "user" in configData["onPremGridDriver"]:
-                    onPremGridDriverConfig.setUser(configData["onPremGridDriver"]["user"])
-                if "accessKey" in configData["onPremGridDriver"]:
-                    onPremGridDriverConfig.setAccessKey(configData["onPremGridDriver"]["accessKey"])
-
-                platformsForOnPremGridDriver = []
-
-                platformsData = configData["onPremGridDriver"]["platforms"]
-                for platform in platformsData:
-                    temp_platform = Platform.PlatformClass()
-
-                    if "name" in platform:
-                        temp_platform.setName(platform["name"])
-                    if "os" in platform:
-                        temp_platform.setOs(platform["os"])
-                    if "os_version" in platform:
-                        temp_platform.setOsVersion(platform["os_version"])
-                    if "browser" in platform:
-                        temp_platform.setBrowser(platform["browser"])
-                    if "browser_version" in platform:
-                        temp_platform.setBrowserVersion(platform["browser_version"])
-                    if "device" in platform:
-                        temp_platform.setDevice(platform["device"])
-                    if "realMobile" in platform:
-                        temp_platform.setRealMobile(platform["realMobile"])
-                        
-                    if "capabilities" in platform:
-                        temp_capabilities = Capabilities.CapabilitiesClass()
-                        temp_caps = platform["capabilities"]
-
-                        for cap in temp_caps:
-                            temp_capabilities.setCapabilities(cap, temp_caps[cap])
-                        
-                        temp_platform.setCapabilities(temp_capabilities)
-
-                    #Adding Current Platform in list
-                    platformsForOnPremGridDriver.append(temp_platform)
-
-                #setting All platforms in Driver config
-                onPremGridDriverConfig.setPlatforms(platformsForOnPremGridDriver)
+                onPremGridDriverConfig = self.createRemoteDriverConfig("onPremGridDriver", configData)
                 
                 #setting config to webDriverConfig
                 webDriverConfiguration.setOnPremGridDriverConfig(onPremGridDriverConfig)
@@ -248,9 +219,14 @@ class WebDriverFactoryClass:
         except Exception as e:
             print(e)
 
+        finally:
+            print(webDriverConfiguration.getOnPremGridDriverConfig())
+            print(webDriverConfiguration.getOnPremDriverConfig())
+            print(webDriverConfiguration.getCloudDriverConfig())
+
         return webDriverConfiguration
 
-    #return a selenium webdriver
+    #return a selenium webdrivers
     def createWebDriverForPlatform(self, platform:Platform, testName:str) :
 
         try :
@@ -280,8 +256,13 @@ class WebDriverFactoryClass:
         platformCapabilities["browser_version"] = platform.getBrowserVersion()
         platformCapabilities["os"] = platform.getOs()
         platformCapabilities["os_version"] = platform.getOsVersion()
-        platformCapabilities["name"] = testName
         platformCapabilities["project"] = commonCapabilities.getProject()
+
+        if testName != None or testName != "":
+            platformCapabilities["name"] = platform.getName()
+        else:
+            platformCapabilities["name"] = testName
+        
         platformCapabilities["build"] = self.createBuildName(commonCapabilities.getBuildPrefix())
         if (commonCapabilities.getCapabilities() != None) :
             commonCaps = commonCapabilities.getCapabilities().getCapabilityMap()
@@ -315,7 +296,7 @@ class WebDriverFactoryClass:
         
     def createOnPremGridWebDriver(self, platform:Platform):
         
-        browerType = platform.getBrowser().toUpperCase()
+        browserType = platform.getBrowser().toUpperCase()
         capabilities = {}
         if (platform.getCapabilities() != None) :
             capabilities = platform.getCapabilities().getCapabilityMap()

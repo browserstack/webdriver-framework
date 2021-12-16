@@ -2,6 +2,8 @@ from browserstack.local import Local
 import os
 import atexit
 import threading
+import string
+import random
 
 class LocalFactoryClass:
     instance = None 
@@ -14,7 +16,7 @@ class LocalFactoryClass:
 
     def __init__(self, localOptions) :
         try :
-            localIdentifier = "RandomString"
+            localIdentifier = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 7))
             if "localIdentifier" in localOptions :
                 localIdentifier = localOptions["localIdentifier"]
 
