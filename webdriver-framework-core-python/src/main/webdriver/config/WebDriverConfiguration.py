@@ -4,12 +4,12 @@ from config import RemoteDriverConfig
 
 class WebDriverConfigurationClass:
 
-    __testEndpoint              :str
-    __namedTestUrls             :dict = {}
-    __driverType                : DriverType.DriverTypeClass
-    __onPremDriverConfig        : OnPremDriverConfig.OnPremDriverConfigClass
-    __onPremGridDriverConfig    : RemoteDriverConfig.RemoteDriverConfigClass
-    __cloudDriverConfig         : RemoteDriverConfig.RemoteDriverConfigClass
+    __testEndpoint              :str = None
+    __namedTestUrls             :dict = {} 
+    __driverType                : DriverType.DriverTypeClass = None
+    __onPremDriverConfig        : OnPremDriverConfig.OnPremDriverConfigClass = None
+    __onPremGridDriverConfig    : RemoteDriverConfig.RemoteDriverConfigClass = None
+    __cloudDriverConfig         : RemoteDriverConfig.RemoteDriverConfigClass = None
 
     def getActivePlatforms(self):
         activePlatforms = []
