@@ -13,6 +13,13 @@ class LocalFactoryClass:
 
     LocalFactoryClassLock = threading.Lock()
 
+    #ENV variable to be set:
+    # export https_proxyHost="localhost"
+    # export https_proxyPort="3128" 
+    # export http_proxyHost="localhost"
+    # export http_proxyPort="3128" 
+    # export https_proxyUser="USERNAME" 
+    # export https_proxyPassword="PASSWORD" 
 
     def __init__(self, localOptions) :
         try :
@@ -22,10 +29,10 @@ class LocalFactoryClass:
 
             localOptions["localIdentifier"] =  localIdentifier
 
-            if (os.getenv("https.proxyHost") != None) :
+            if (os.getenv("https_proxy") != None) : 
                 self.setProxy("https", localOptions)
             else:
-                if (os.getenv("http.proxyHost") != None) :
+                if (os.getenv("http_proxy") != None) :
                     self.setProxy("http", localOptions)
 
             self.local.start(**localOptions)
@@ -35,16 +42,15 @@ class LocalFactoryClass:
         except Exception as e :
             print("Initialization of BrowserStack Local failed.")
             print(e)
-            # throw new RuntimeException("Initialization of BrowserStack Local failed.", e);
     
-    def setProxy(protocol:str, localOptions: dict) :
-        proxyHost = os.getenv(protocol+".proxyHost")
-        proxyPort = os.getenv(protocol+".proxyPort")
-        proxyUser = os.getenv(protocol+".proxyUser")
-        proxyPassword = os.getenv(protocol+".proxyPassword")
+    def setProxy(self, protocol:str, localOptions: dict) :
+        proxyHost = os.getenv(protocol+"_proxyHost")
+        proxyPort = os.getenv(protocol+"_proxyPort")
+        proxyUser = os.getenv(protocol+"_proxyUser")
+        proxyPassword = os.getenv(protocol+"_proxyPassword")
         proxyHostPrefix = "proxy"
         proxyUserPrefix = "proxy"
-        if (proxyHost.startsWith("local") or proxyHost.startsWith("127.")):
+        if (proxyHost.startswith("local") or proxyHost.startswith("127.")):
             proxyHostPrefix = "localProxy"
             proxyUserPrefix = "-localProxy"
         
