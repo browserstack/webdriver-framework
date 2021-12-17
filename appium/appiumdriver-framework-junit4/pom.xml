@@ -1,42 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>com.browserstack</groupId>
         <artifactId>appiumdriver-framework</artifactId>
         <version>0.0.1</version>
     </parent>
-
     <artifactId>appiumdriver-framework-junit4</artifactId>
     <packaging>jar</packaging>
-
     <name>appiumdriver-framework-junit4</name>
     <description>Appium Driver management framework for JUnit4.</description>
     <url>https://www.browserstack.com</url>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <junit4.version>4.13.1</junit4.version>
+        <junit4.version>4.12</junit4.version>
         <appium.version>7.6.0</appium.version>
     </properties>
-
     <dependencies>
+        <dependency>
+            <groupId>com.browserstack</groupId>
+            <artifactId>appiumdriver-framework-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.appium</groupId>
             <artifactId>java-client</artifactId>
             <version>${appium.version}</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.browserstack</groupId>
-            <artifactId>appiumdriver-framework-core</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -45,9 +37,12 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
@@ -78,5 +73,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
