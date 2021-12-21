@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.browserstack</groupId>
     <artifactId>appiumdriver-framework</artifactId>
     <version>0.0.1</version>
     <packaging>pom</packaging>
-
     <name>appiumdriver-framework</name>
     <description>A framework which manages Appium Driver creation based on an external configuration file.</description>
     <url>https://www.browserstack.com</url>
@@ -19,7 +14,6 @@
             <url>https://opensource.org/licenses/MIT</url>
         </license>
     </licenses>
-
     <developers>
         <developer>
             <name>BrowserStack</name>
@@ -28,14 +22,12 @@
             <organizationUrl>https://www.browserstack.com</organizationUrl>
         </developer>
     </developers>
-
     <modules>
         <module>appiumdriver-framework-core</module>
         <module>appiumdriver-framework-testng</module>
         <module>appiumdriver-framework-junit5</module>
         <module>appiumdriver-framework-junit4</module>
     </modules>
-
     <scm>
         <connection>scm:git:git@github.com:browserstack/webdriver-framework.git</connection>
         <developerConnection>scm:git:git@github.com:browserstack/webdriver-framework.git</developerConnection>
@@ -49,33 +41,17 @@
         </snapshotRepository>
         <repository>
             <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/releases</url>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
     </distributionManagement>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
-
     <build>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
-                    <version>1.5</version>
-                    <executions>
-                        <execution>
-                            <id>sign-artifacts</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>sign</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -86,6 +62,18 @@
                         <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                         <autoReleaseAfterClose>false</autoReleaseAfterClose>
                     </configuration>
+                    <dependencies>
+                        <!-- 
+                        TODO:
+                            Remove after OSSRH-66257, NEXUS-26993 are fixed,
+                            possibly via https://github.com/sonatype/nexus-maven-plugins/pull/91
+                         -->
+                        <dependency>
+                            <groupId>com.thoughtworks.xstream</groupId>
+                            <artifactId>xstream</artifactId>
+                            <version>1.4.15</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -143,7 +131,6 @@
             </plugins>
         </pluginManagement>
     </build>
-
     <profiles>
         <profile>
             <id>release-sign-artifacts</id>
@@ -176,8 +163,20 @@
                         <configuration>
                             <serverId>ossrh</serverId>
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <autoReleaseAfterClose>false</autoReleaseAfterClose>
                         </configuration>
+                        <dependencies>
+                            <!-- 
+                               TODO:
+                                 Remove after OSSRH-66257, NEXUS-26993 are fixed,
+                                 possibly via https://github.com/sonatype/nexus-maven-plugins/pull/91
+                             -->
+                            <dependency>
+                                <groupId>com.thoughtworks.xstream</groupId>
+                                <artifactId>xstream</artifactId>
+                                <version>1.4.15</version>
+                            </dependency>
+                        </dependencies>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -194,6 +193,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -210,5 +210,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>

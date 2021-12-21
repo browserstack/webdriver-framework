@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>com.browserstack</groupId>
         <artifactId>appiumdriver-framework</artifactId>
         <version>0.0.1</version>
     </parent>
-
     <artifactId>appiumdriver-framework-testng</artifactId>
     <packaging>jar</packaging>
-
     <name>appiumdriver-framework-testng</name>
     <description>Appium Driver management framework for TestNG.</description>
     <url>https://www.browserstack.com</url>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -25,7 +18,6 @@
         <testng.version>7.1.0</testng.version>
         <appium.version>7.6.0</appium.version>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.browserstack</groupId>
@@ -44,9 +36,12 @@
             <version>${testng.version}</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
