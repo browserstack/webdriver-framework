@@ -13,11 +13,13 @@ import yaml
 import json
 import os
 import threading
+import logging
+logger=logging.getLogger()
 
 from selenium import webdriver
 
 class WebDriverFactoryClass:
-    DEFAULT_CAPABILITIES_FILE = "/Users/princeton99/Desktop/All/BrowserStack/BrowserStack_Projects/webdriver-framework/webdriver-framework-core-python/src/test/resources/webdriver-config.yml"
+    DEFAULT_CAPABILITIES_FILE = "PATH_TO_YML_FILE"
 
     BROWSERSTACK_USERNAME = "BROWSERSTACK_USERNAME"
     BROWSERSTACK_ACCESS_KEY = "BROWSERSTACK_ACCESS_KEY"
@@ -43,7 +45,7 @@ class WebDriverFactoryClass:
         platforms = self.webDriverConfiguration.getActivePlatforms()
         if(self.isCloudDriver()):
             self.startLocalTunnel()
-        print(f"Running tests on {len(platforms)} active platforms." )
+        logger.debug(f"Running tests on {len(platforms)} active platforms." )
 
     @staticmethod
     def getInstance() :
@@ -150,7 +152,7 @@ class WebDriverFactoryClass:
     def parseWebDriverConfig(self) :
 
         capabilitiesConfigFile = self.DEFAULT_CAPABILITIES_FILE
-        print(f"Using capabilities configuration from FILE :: {capabilitiesConfigFile}");
+        logger.debug(f"Using capabilities configuration from FILE :: {capabilitiesConfigFile}");
         ##Read yml file 
         configData = {}
         with open(capabilitiesConfigFile) as f:
@@ -177,7 +179,7 @@ class WebDriverFactoryClass:
                 driverType = configData["driverType"]
                 webDriverConfiguration.setDriverType(DriverType.DriverTypeClass[driverType])
             else:
-                print("Please provide a driverType")
+                logger.error("Please provide a driverType")
 
             #Setting On Prem
             platformsForOnPrem = []
@@ -216,17 +218,13 @@ class WebDriverFactoryClass:
                 #setting config to webDriverConfig
                 webDriverConfiguration.setOnPremGridDriverConfig(onPremGridDriverConfig)
             
-        except Exception as e:
-            print(e)
-
-        finally:
-            print(webDriverConfiguration.getOnPremGridDriverConfig())
-            print(webDriverConfiguration.getOnPremDriverConfig())
-            print(webDriverConfiguration.getCloudDriverConfig())
+        except Exception as exception:
+            logger.error("Something went wrong in reading the configuration file")
+            raise exception
 
         return webDriverConfiguration
 
-    #return a selenium webdrivers
+    #return a selenium webdriver
     def createWebDriverForPlatform(self, platform:Platform, testName:str) :
 
         try :
@@ -240,8 +238,9 @@ class WebDriverFactoryClass:
                 webDriver = self.createRemoteWebDriver(platform, testName)
 
             return webDriver
-        except Exception as e:
-           print(e)
+        except Exception as exception:
+           logger.error("Something went wrong in creating the Web Driver")
+           raise exception
         
     def createRemoteWebDriver(self, platform:Platform, testName: str):
 
@@ -287,7 +286,7 @@ class WebDriverFactoryClass:
             platformCapabilities["browserstack.localIdentifier"] = LocalFactory.LocalFactoryClass.getInstance().getLocalIdentifier()
 
 
-        print(f"Initialising RemoteWebDriver with capabilities : {platformCapabilities} ")
+        logger.debug(f"Initialising RemoteWebDriver with capabilities : {platformCapabilities} ")
         cloudWebDriver =   webdriver.Remote( \
                         command_executor=remoteDriverConfig.getHubUrl(), \
                         desired_capabilities=platformCapabilities)
@@ -301,7 +300,7 @@ class WebDriverFactoryClass:
         if (platform.getCapabilities() != None) :
             capabilities = platform.getCapabilities().getCapabilityMap()
         
-        print(f"Initialising RemoteWebDriver with capabilities : {capabilities} ")
+        logger.debug(f"Initialising RemoteWebDriver with capabilities : {capabilities} ")
         onPremGridWebDriver =   webdriver.Remote( \
                         command_executor=self.webDriverConfiguration.getOnPremGridDriverConfig().getHubUrl(), \
                         desired_capabilities=capabilities)
@@ -330,10 +329,10 @@ class WebDriverFactoryClass:
         elif browserType == "OPERA" :
             onPremWebDriver = webdriver.Opera()
         else:
-            print("Not supported")
+            logger.error("Browser not supported")
             return None
         
-        print(f"Initialising Driver for : {browserType} ")
+        logger.debug(f"Initialising Driver for : {browserType} ")
         return onPremWebDriver
 
     def getTestEndpoint(self):

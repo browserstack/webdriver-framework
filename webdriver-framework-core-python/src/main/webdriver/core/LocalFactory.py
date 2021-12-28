@@ -4,6 +4,8 @@ import atexit
 import threading
 import string
 import random
+import logging
+logger=logging.getLogger()
 
 class LocalFactoryClass:
     instance = None 
@@ -12,14 +14,6 @@ class LocalFactoryClass:
     localIdentifier : str = ""
 
     LocalFactoryClassLock = threading.Lock()
-
-    #ENV variable to be set:
-    # export https_proxyHost="localhost"
-    # export https_proxyPort="3128" 
-    # export http_proxyHost="localhost"
-    # export http_proxyPort="3128" 
-    # export https_proxyUser="USERNAME" 
-    # export https_proxyPassword="PASSWORD" 
 
     def __init__(self, localOptions) :
         try :
@@ -38,10 +32,10 @@ class LocalFactoryClass:
             self.local.start(**localOptions)
             LocalFactoryClass.localIdentifier = localIdentifier
 
-            print(f"Started BrowserStack Local with identifier {localIdentifier}.")
-        except Exception as e :
-            print("Initialization of BrowserStack Local failed.")
-            print(e)
+            logger.debug(f"Started BrowserStack Local with identifier {localIdentifier}.")
+        except Exception as exception :
+            logger.debug("Initialization of BrowserStack Local failed.")
+            raise exception
     
     def setProxy(self, protocol:str, localOptions: dict) :
         proxyHost = os.getenv(protocol+"_proxyHost")
@@ -60,7 +54,7 @@ class LocalFactoryClass:
             localOptions[proxyUserPrefix+ "User"] = proxyUser
             localOptions[proxyUserPrefix+"Pass"] = proxyPassword
     
-        print(f"Proxy configurations detected Host : {proxyHost}, Port : {proxyPort}, User: {proxyUser}." )
+        logger.debug(f"Proxy configurations detected Host : {proxyHost}, Port : {proxyPort}, User: {proxyUser}." )
 
     @staticmethod
     def createInstance(args:dict) :
@@ -69,7 +63,7 @@ class LocalFactoryClass:
             with LocalFactoryClass.LocalFactoryClassLock:
                 if (LocalFactoryClass.instance == None) :
                     LocalFactoryClass.instance = LocalFactoryClass(args)
-                    print("Starting Local Instance...")
+                    logger.debug("Starting Local Instance...")
                     atexit.register(LocalFactoryClass.stopLocal)
             
     @staticmethod
@@ -83,8 +77,8 @@ class LocalFactoryClass:
     @staticmethod
     def stopLocal():
         if (LocalFactoryClass.instance.local.isRunning()):
-            print("Stopping Local Instance")
+            logger.debug("Stopping Local Instance")
             LocalFactoryClass.instance.local.stop()
         else:
-            print("Local is not running [IGNORE]")
+            logger.debug("Local is not running [IGNORE]")
         
