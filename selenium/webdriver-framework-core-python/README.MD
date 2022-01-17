@@ -63,7 +63,7 @@ cloudDriver:
 
 ## Initialize webdriver instances based on the configuration
 
-The [WebDriverFactory](src/main/webdriver/core/WebDriverFactory.java) class looks for environment variable named "capabilities.config" which should be pointing to the file to be used. Further the class parses the file and initialises the [WebDriverConfiguration](src/main/webdriver/config/WebDriverConfiguration.java) class
+The [WebDriverFactory](src/main/webdriver/core/WebDriverFactory.py) class looks for environment variable named "capabilities.config" which should be pointing to the file to be used. Further the class parses the file and initialises the [WebDriverConfiguration](src/main/webdriver/config/WebDriverConfiguration.py) class
 
 ## Provides APIs to inject the Webdriver instances in your tests
 

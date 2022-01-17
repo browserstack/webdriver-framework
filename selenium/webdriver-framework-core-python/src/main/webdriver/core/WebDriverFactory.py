@@ -24,7 +24,7 @@ class WebDriverFactoryClass:
     BROWSERSTACK_USERNAME = "BROWSERSTACK_USERNAME"
     BROWSERSTACK_ACCESS_KEY = "BROWSERSTACK_ACCESS_KEY"
     BUILD_ID = "BUILD_ID"
-    DEFAULT_BUILD_NAME = "browserstack-examples-junit5"
+    DEFAULT_BUILD_NAME = "browserstack-examples-python"
     DEFAULT_BUILD_ENV_NAME = "BROWSERSTACK_BUILD_NAME"
 
     WEBDRIVER_CHROME_DRIVER = "webdriver.chrome.driver"

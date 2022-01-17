@@ -10,10 +10,10 @@ onPremDriver:
   platforms:
     - name:
       browser: Chrome
-      driverPath: /Users/princeton99/Downloads/Drivers/ChromeDriver/chromedriver
+      driverPath: /PATH/TO/CHROME/DRIVER
     - name:
       browser: Firefox
-      driverPath: /Users/princeton99/Downloads/Drivers/Mozilla/geckodriver
+      driverPath: /PATH/TO/FIREFOX/DRIVER
 
 cloudDriver:
   hubUrl: https://hub-cloud.browserstack.com/wd/hub
