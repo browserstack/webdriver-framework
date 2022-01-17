@@ -31,7 +31,7 @@ cloudDriver:
     enabled: false
   common_capabilities:
     project: BrowserStack Demo Repository
-    buildPrefix: browserstack-examples-testng
+    buildPrefix: browserstack-examples-python
     capabilities:
       browserstack.debug: true
       browserstack.networkLogs: true
