@@ -241,10 +241,12 @@ class WebDriverFactoryClass:
         except Exception as exception:
            logger.error("Something went wrong in creating the Web Driver")
            raise exception
-        
-    def createRemoteWebDriver(self, platform:Platform, testName: str):
 
-        remoteDriverConfig = self.webDriverConfiguration.getCloudDriverConfig()
+    def getPlatformCaps(self,platform:Platform, testName:str , remoteDriverConfig):
+        
+        if(remoteDriverConfig == None):
+            remoteDriverConfig = self.webDriverConfiguration.getCloudDriverConfig()
+   
         commonCapabilities = remoteDriverConfig.getCommonCapabilities()
         platformCapabilities = {}
 
@@ -285,6 +287,12 @@ class WebDriverFactoryClass:
             platformCapabilities["browserstack.local"] = "true"
             platformCapabilities["browserstack.localIdentifier"] = LocalFactory.LocalFactoryClass.getInstance().getLocalIdentifier()
 
+        return platformCapabilities
+
+    def createRemoteWebDriver(self, platform:Platform, testName: str):
+
+        remoteDriverConfig = self.webDriverConfiguration.getCloudDriverConfig()
+        platformCapabilities = self.getPlatformCaps(platform,testName,remoteDriverConfig)
 
         logger.debug(f"Initialising RemoteWebDriver with capabilities : {platformCapabilities} ")
         cloudWebDriver =   webdriver.Remote( \
