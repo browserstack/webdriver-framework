@@ -150,8 +150,11 @@ class WebDriverFactoryClass:
 
 
     def parseWebDriverConfig(self) :
-
         capabilitiesConfigFile = self.DEFAULT_CAPABILITIES_FILE
+        
+        if(os.getenv("CONFIG_FILE_PATH") != "" or os.getenv("CONFIG_FILE_PATH") != None):
+            capabilitiesConfigFile = os.getenv("CONFIG_FILE_PATH")
+
         logger.debug(f"Using capabilities configuration from FILE :: {capabilitiesConfigFile}");
         ##Read yml file 
         configData = {}

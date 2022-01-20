@@ -68,3 +68,5 @@ The [WebDriverFactory](src/main/webdriver/core/WebDriverFactory.py) class looks 
 ## Provides APIs to inject the Webdriver instances in your tests
 
 Make use of `createWebDriverForPlatform` method inside your framework to inject the webdriver into your respective test instances.
+
+Path of the Config file can be set as environment variable named as `CONFIG_FILE_PATH`
