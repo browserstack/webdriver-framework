@@ -365,8 +365,8 @@ class WebDriverFactoryClass:
         return self.webDriverConfiguration.getActivePlatforms()
 
     def createBuildName(self, buildPrefix:str):
-        if(os.getenv('DEFAULT_BUILD_ENV_NAME')):
-            return os.getenv('DEFAULT_BUILD_ENV_NAME')
+        if(os.getenv(self.DEFAULT_BUILD_ENV_NAME)):
+            return os.getenv(self.DEFAULT_BUILD_ENV_NAME)
         
         if (buildPrefix == "" or buildPrefix is None) :
             buildPrefix = self.DEFAULT_BUILD_NAME
