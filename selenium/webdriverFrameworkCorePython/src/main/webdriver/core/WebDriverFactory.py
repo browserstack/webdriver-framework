@@ -377,4 +377,4 @@ class WebDriverFactoryClass:
         if (os.getenv("BUILD_ID")) :
             buildSuffix = os.getenv("BUILD_ID")
 
-        return buildName + "-" + buildSuffix
+        return buildName
